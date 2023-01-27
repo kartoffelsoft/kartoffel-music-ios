@@ -1,15 +1,22 @@
-import UIKit
 import AppRootFeature
+import ComposableArchitecture
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    let store = AppRoot.State()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
       
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = AppRootViewController()
+        window.rootViewController = AppRootViewController(
+            store: Store(
+                initialState: AppRoot.State(),
+                reducer: AppRoot()
+            )
+        )
         window.makeKeyAndVisible()
         self.window = window
     }

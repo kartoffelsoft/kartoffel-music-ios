@@ -1,10 +1,12 @@
 // swift-tools-version: 5.7
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "kartoffel-music-app",
+    platforms: [
+        .iOS(.v13)
+    ],
     products: [
         .library(
             name: "AppRootFeature",
@@ -20,22 +22,30 @@ let package = Package(
         ),
     ],
     dependencies: [
-        
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.50.0"),
     ],
     targets: [
         .target(
             name: "AppRootFeature",
-            dependencies: [],
+            dependencies: [
+                "FilesFeature",
+                "PlayListsFeature",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
             path: "./Sources/Features/AppRootFeature"
         ),
         .target(
             name: "FilesFeature",
-            dependencies: [],
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
             path: "./Sources/Features/FilesFeature"
         ),
         .target(
             name: "PlayListsFeature",
-            dependencies: [],
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
             path: "./Sources/Features/PlayListsFeature"
         ),
         .testTarget(
