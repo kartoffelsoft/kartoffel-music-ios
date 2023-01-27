@@ -20,6 +20,10 @@ let package = Package(
             name: "PlayListsFeature",
             targets: ["PlayListsFeature"]
         ),
+        .library(
+            name: "StyleGuide",
+            targets: ["StyleGuide"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.50.0"),
@@ -30,6 +34,7 @@ let package = Package(
             dependencies: [
                 "FilesFeature",
                 "PlayListsFeature",
+                "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "./Sources/Features/AppRootFeature"
@@ -47,6 +52,10 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "./Sources/Features/PlayListsFeature"
+        ),
+        .target(
+            name: "StyleGuide",
+            resources: [.process("Resources/")]
         ),
         .testTarget(
             name: "FilesFeatureTests",

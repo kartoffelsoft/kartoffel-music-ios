@@ -10,10 +10,6 @@ public class PlayListsViewController: UIViewController {
         self.store = store
         self.viewStore = ViewStore(store)
         super.init(nibName: nil, bundle: nil)
-        
-        self.tabBarItem = UITabBarItem()
-        self.tabBarItem.image = UIImage(systemName: "play.rectangle")
-        self.tabBarItem.selectedImage = UIImage(systemName: "play.rectangle.fill")
     }
     
     required init?(coder: NSCoder) {
@@ -22,9 +18,6 @@ public class PlayListsViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        title = "PlayLists"
-        tabBarItem.title = ""
-        navigationController?.navigationBar.prefersLargeTitles = true
     }
 
 }
