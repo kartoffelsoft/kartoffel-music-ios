@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import StyleGuide
 import UIKit
 
 public class PlayListsViewController: UIViewController {
@@ -18,6 +19,29 @@ public class PlayListsViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupNavigationBar()
+    }
+    
+    private func setupNavigationBar() {
+        let titleLabel = UILabel()
+        titleLabel.textColor = .theme.primary
+        titleLabel.text = "Play Lists";
+        titleLabel.font = .systemFont(ofSize: 24, weight: .semibold)
+        
+        let addButton = UIBarButtonItem(
+            barButtonSystemItem: .add,
+            target: self,
+            action: #selector(handleAddButtonTap)
+        )
+        addButton.tintColor = .theme.primary
+        
+        self.navigationItem.leftBarButtonItem = .init(customView: titleLabel)
+        self.navigationItem.rightBarButtonItems = [ addButton ]
+    }
+    
+    @objc private func handleAddButtonTap() {
+        print("# handleAddButtonTap")
     }
 
 }

@@ -33,7 +33,7 @@ public class AppRootViewController: UITabBarController {
                         action: AppRoot.Action.playLists
                     )
                 ),
-                title: "PlayLists",
+                title: "Play Lists",
                 tabBarImage: UIImage(systemName: "play.rectangle"),
                 tabBarSelectedImage: UIImage(systemName: "play.rectangle.fill")
             ),
@@ -61,10 +61,7 @@ public class AppRootViewController: UITabBarController {
         let navigationController = UINavigationController(
             rootViewController: viewController
         )
-        
-        viewController.title = title
-        viewController.navigationController?.navigationBar.prefersLargeTitles = true
-        viewController.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.theme.primary]
+
         viewController.tabBarItem = UITabBarItem()
         viewController.tabBarItem.image = tabBarImage
         viewController.tabBarItem.selectedImage = tabBarSelectedImage
