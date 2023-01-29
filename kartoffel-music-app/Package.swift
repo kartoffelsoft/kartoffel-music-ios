@@ -17,12 +17,20 @@ let package = Package(
             targets: ["FilesFeature"]
         ),
         .library(
+            name: "PlayListCreateFeature",
+            targets: ["PlayListCreateFeature"]
+        ),
+        .library(
             name: "PlayListsFeature",
             targets: ["PlayListsFeature"]
         ),
         .library(
             name: "StyleGuide",
             targets: ["StyleGuide"]
+        ),
+        .library(
+            name: "UIKitUtils",
+            targets: ["UIKitUtils"]
         ),
     ],
     dependencies: [
@@ -47,11 +55,27 @@ let package = Package(
             path: "./Sources/Features/FilesFeature"
         ),
         .target(
-            name: "PlayListsFeature",
+            name: "PlayListCreateFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
+            path: "./Sources/Features/PlayListCreateFeature"
+        ),
+        .target(
+            name: "PlayListsFeature",
+            dependencies: [
+                "PlayListCreateFeature",
+                "StyleGuide",
+                "UIKitUtils",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
             path: "./Sources/Features/PlayListsFeature"
+        ),
+        .target(
+            name: "UIKitUtils",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
         ),
         .target(
             name: "StyleGuide",

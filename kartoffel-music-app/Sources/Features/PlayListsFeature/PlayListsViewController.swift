@@ -1,11 +1,15 @@
+import Combine
+import PlayListCreateFeature
 import ComposableArchitecture
 import StyleGuide
 import UIKit
+import UIKitUtils
 
 public class PlayListsViewController: UIViewController {
     
     private let store: StoreOf<PlayLists>
     private let viewStore: ViewStoreOf<PlayLists>
+    private var cancellables: [AnyCancellable] = []
     
     public init(store: StoreOf<PlayLists>) {
         self.store = store
@@ -20,7 +24,14 @@ public class PlayListsViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupNavigation()
         setupNavigationBar()
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        if !self.isMovingToParent {
+            self.viewStore.send(.navigateToPlayListCreate(false))
+        }
     }
     
     private func setupNavigationBar() {
@@ -40,8 +51,30 @@ public class PlayListsViewController: UIViewController {
         self.navigationItem.rightBarButtonItems = [ addButton ]
     }
     
-    @objc private func handleAddButtonTap() {
-        print("# handleAddButtonTap")
+    private func setupNavigation() {
+        self.viewStore.publisher.isNavigationActive.sink { [weak self] isNavigationActive in
+            guard let self = self else { return }
+            if isNavigationActive {
+                self.present(
+                    IfLetStoreController(
+                        store: self.store
+                        .scope(state: \.playListCreate, action: PlayLists.Action.playListCreate)
+                    ) {
+                        PlayListCreateViewController(store: $0)
+                    } else: {
+                        UIViewController()
+                    },
+                    animated: true
+                )
+            } else {
+                self.dismiss(animated: true)
+            }
+        }
+        .store(in: &self.cancellables)
     }
-
+    
+    @objc private func handleAddButtonTap() {
+        self.viewStore.send(.navigateToPlayListCreate(true))
+    }
+    
 }

@@ -30,6 +30,12 @@ public struct AppRoot: ReducerProtocol {
                 return .none
             }
         }
+        Scope(state: \.playLists, action: /Action.playLists) {
+            PlayLists()
+        }
+        Scope(state: \.files, action: /Action.files) {
+            Files()
+        }
     }
     
 }
