@@ -6,71 +6,7 @@ public class LibraryViewController: UIViewController {
     private let store: StoreOf<Library>
     private let viewStore: ViewStoreOf<Library>
     
-    private let collectionView: UICollectionView = {
-        return UICollectionView(
-            frame: .zero,
-            collectionViewLayout: UICollectionViewCompositionalLayout { section, _ in
-                let padding: CGFloat = 8
-                
-                switch(Section(rawValue: section)) {
-                case .storageProviders:
-                    let item = NSCollectionLayoutItem(
-                        layoutSize: .init(
-                            widthDimension: .fractionalWidth(0.33),
-                            heightDimension: .fractionalHeight(1)
-                        )
-                    )
-                    
-                    item.contentInsets = .init(
-                        top: padding,
-                        leading: padding,
-                        bottom: padding,
-                        trailing: padding
-                    )
-                    
-                    let group = NSCollectionLayoutGroup.horizontal(
-                        layoutSize: .init(
-                            widthDimension: .fractionalWidth(1),
-                            heightDimension: .absolute(120)
-                        ),
-                        subitems: [ item ]
-                    )
-
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.orthogonalScrollingBehavior = .continuous
-                    return section
-
-                case .localFiles:
-                    let item = NSCollectionLayoutItem(
-                        layoutSize: .init(
-                            widthDimension: .fractionalWidth(1),
-                            heightDimension: .absolute(40)
-                        )
-                    )
-
-                    item.contentInsets = .init(
-                        top: padding,
-                        leading: padding,
-                        bottom: padding,
-                        trailing: padding
-                    )
-
-                    let group = NSCollectionLayoutGroup.horizontal(
-                        layoutSize: .init(
-                            widthDimension: .fractionalWidth(1),
-                            heightDimension: .estimated(500)
-                        ),
-                        subitems: [ item ]
-                    )
-
-                    return NSCollectionLayoutSection(group: group)
-
-                default:
-                    return nil
-                }
-            }
-        )
-    }()
+    private var collectionView: UICollectionView!
     
     public init(store: StoreOf<Library>) {
         self.store = store
@@ -100,10 +36,18 @@ public class LibraryViewController: UIViewController {
     }
     
     private func setupCollectionView() {
-        collectionView.backgroundColor = .clear
+        collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: createCollectionViewLayout()
+        )
+        collectionView.backgroundColor = .theme.background
         collectionView.delegate = self
         collectionView.dataSource = self
-
+        collectionView.register(
+            HeaderReusableView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: HeaderReusableView.reuseIdentifier
+        )
         collectionView.register(
             StorageProviderCell.self,
             forCellWithReuseIdentifier: StorageProviderCell.reuseIdentifier
@@ -129,6 +73,93 @@ public class LibraryViewController: UIViewController {
     
 }
 
+extension LibraryViewController {
+    private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
+        return UICollectionViewCompositionalLayout { section, _ in
+            let padding: CGFloat = 8
+            
+            switch(Section(rawValue: section)) {
+            case .storageProviders:
+                let item = NSCollectionLayoutItem(
+                    layoutSize: .init(
+                        widthDimension: .fractionalWidth(0.33),
+                        heightDimension: .fractionalHeight(1)
+                    )
+                )
+                
+                item.contentInsets = .init(
+                    top: padding,
+                    leading: padding,
+                    bottom: padding,
+                    trailing: padding
+                )
+                
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: .init(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .absolute(120)
+                    ),
+                    subitems: [ item ]
+                )
+                
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1.0),
+                        heightDimension: .absolute(50.0)
+                    ),
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [ header ]
+                section.orthogonalScrollingBehavior = .continuous
+                return section
+
+            case .localFiles:
+                let item = NSCollectionLayoutItem(
+                    layoutSize: .init(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .absolute(40)
+                    )
+                )
+
+                item.contentInsets = .init(
+                    top: padding,
+                    leading: padding,
+                    bottom: padding,
+                    trailing: padding
+                )
+
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: .init(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .estimated(500)
+                    ),
+                    subitems: [ item ]
+                )
+
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1.0),
+                        heightDimension: .absolute(50.0)
+                    ),
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+                header.pinToVisibleBounds = true
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [ header ]
+                return section
+
+            default:
+                return nil
+            }
+        }
+    }
+}
+
 extension LibraryViewController: UICollectionViewDelegate {
     
     private enum Section: Int, CaseIterable {
@@ -142,6 +173,26 @@ extension LibraryViewController: UICollectionViewDelegate {
         return Section.allCases.count
     }
     
+    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: HeaderReusableView.reuseIdentifier,
+            for: indexPath
+        ) as! HeaderReusableView
+        
+        switch(Section(rawValue: indexPath.section)) {
+        case .storageProviders:
+            header.title.text = "Storage Providers"
+        case .localFiles:
+            header.title.text = "Local Storage"
+        case .none:
+            break
+        }
+        
+        return header
+    }
+    
     public func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
@@ -150,7 +201,7 @@ extension LibraryViewController: UICollectionViewDelegate {
         case .storageProviders:
             return 1
         case .localFiles:
-            return 8
+            return 20
         case .none:
             return 0
         }

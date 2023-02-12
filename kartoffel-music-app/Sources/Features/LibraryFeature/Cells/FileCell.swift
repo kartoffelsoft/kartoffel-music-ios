@@ -19,7 +19,6 @@ class FileCell: UICollectionViewCell {
     private func setupConstraints() {
         name.translatesAutoresizingMaskIntoConstraints = false
 
-        
         addSubview(name)
         
         NSLayoutConstraint.activate([
