@@ -1,4 +1,5 @@
 import UIKit
+import StyleGuide
 
 class StorageProviderCell: UICollectionViewCell {
     
@@ -10,6 +11,10 @@ class StorageProviderCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        contentView.layer.backgroundColor = UIColor.theme.foreground.cgColor
+        contentView.layer.cornerRadius = 12
+        
         setupConstraints()
     }
     
@@ -21,8 +26,8 @@ class StorageProviderCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             image.centerYAnchor.constraint(equalTo: centerYAnchor),
             image.centerXAnchor.constraint(equalTo: centerXAnchor),
-            image.widthAnchor.constraint(equalToConstant: 32),
-            image.heightAnchor.constraint(equalToConstant: 32),
+            image.widthAnchor.constraint(equalToConstant: 48),
+            image.heightAnchor.constraint(equalToConstant: 48),
         ])
     }
     

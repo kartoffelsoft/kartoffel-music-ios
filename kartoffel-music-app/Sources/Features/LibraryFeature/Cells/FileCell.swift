@@ -9,13 +9,16 @@ class FileCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+
+        name.text = "file1.mp3"
+        name.textColor = .theme.primary
+        
         setupConstraints()
     }
     
     private func setupConstraints() {
         name.translatesAutoresizingMaskIntoConstraints = false
-        name.text = "file1.mp3"
-        name.textColor = .theme.primary
+
         
         addSubview(name)
         
