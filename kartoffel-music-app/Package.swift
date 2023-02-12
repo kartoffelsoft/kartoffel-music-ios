@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "kartoffel-music-app",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v14)
     ],
     products: [
         .library(
@@ -52,7 +52,8 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
-            path: "./Sources/Features/LibraryFeature"
+            path: "./Sources/Features/LibraryFeature",
+            resources: [.process("Resources/")]
         ),
         .target(
             name: "PlayListCreateFeature",
