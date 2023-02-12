@@ -2,12 +2,12 @@ import ComposableArchitecture
 import StyleGuide
 import UIKit
 
-public class FilesViewController: UIViewController {
+public class LibraryViewController: UIViewController {
     
-    private let store: StoreOf<Files>
-    private let viewStore: ViewStoreOf<Files>
+    private let store: StoreOf<Library>
+    private let viewStore: ViewStoreOf<Library>
     
-    public init(store: StoreOf<Files>) {
+    public init(store: StoreOf<Library>) {
         self.store = store
         self.viewStore = ViewStore(store)
         super.init(nibName: nil, bundle: nil)
@@ -21,27 +21,20 @@ public class FilesViewController: UIViewController {
         super.viewDidLoad()
         
         setupNavigationBar()
+        setupConstraints()
     }
     
     private func setupNavigationBar() {
         let titleLabel = UILabel()
         titleLabel.textColor = .theme.primary
-        titleLabel.text = "Files";
+        titleLabel.text = "Library";
         titleLabel.font = .systemFont(ofSize: 24, weight: .semibold)
         
-        let addButton = UIBarButtonItem(
-            barButtonSystemItem: .add,
-            target: self,
-            action: #selector(handleAddButtonTap)
-        )
-        addButton.tintColor = .theme.primary
-        
         self.navigationItem.leftBarButtonItem = .init(customView: titleLabel)
-        self.navigationItem.rightBarButtonItems = [ addButton ]
     }
+    
+    private func setupConstraints() {
 
-    @objc private func handleAddButtonTap() {
-        print("# handleAddButtonTap")
     }
     
 }

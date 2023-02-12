@@ -1,21 +1,21 @@
 import ComposableArchitecture
-import FilesFeature
+import LibraryFeature
 import PlayListsFeature
 
 public struct AppRoot: ReducerProtocol {
     public struct State: Equatable {
         
-        var files: Files.State
+        var library: Library.State
         var playLists: PlayLists.State
         
         public init() {
-            files = .init()
+            library = .init()
             playLists = .init()
         }
     }
     
     public enum Action: Equatable {
-        case files(Files.Action)
+        case library(Library.Action)
         case playLists(PlayLists.Action)
     }
     
@@ -24,7 +24,7 @@ public struct AppRoot: ReducerProtocol {
     public var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
-            case .files:
+            case .library:
                 return .none
             case .playLists:
                 return .none
@@ -33,8 +33,8 @@ public struct AppRoot: ReducerProtocol {
         Scope(state: \.playLists, action: /Action.playLists) {
             PlayLists()
         }
-        Scope(state: \.files, action: /Action.files) {
-            Files()
+        Scope(state: \.library, action: /Action.library) {
+            Library()
         }
     }
     

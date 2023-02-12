@@ -13,8 +13,8 @@ let package = Package(
             targets: ["AppRootFeature"]
         ),
         .library(
-            name: "FilesFeature",
-            targets: ["FilesFeature"]
+            name: "LibraryFeature",
+            targets: ["LibraryFeature"]
         ),
         .library(
             name: "PlayListCreateFeature",
@@ -40,7 +40,7 @@ let package = Package(
         .target(
             name: "AppRootFeature",
             dependencies: [
-                "FilesFeature",
+                "LibraryFeature",
                 "PlayListsFeature",
                 "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
@@ -48,11 +48,11 @@ let package = Package(
             path: "./Sources/Features/AppRootFeature"
         ),
         .target(
-            name: "FilesFeature",
+            name: "LibraryFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
-            path: "./Sources/Features/FilesFeature"
+            path: "./Sources/Features/LibraryFeature"
         ),
         .target(
             name: "PlayListCreateFeature",
@@ -82,9 +82,9 @@ let package = Package(
             resources: [.process("Resources/")]
         ),
         .testTarget(
-            name: "FilesFeatureTests",
-            dependencies: ["FilesFeature"],
-            path: "./Tests/Features/FilesFeatureTests"
+            name: "LibraryFeatureTests",
+            dependencies: ["LibraryFeature"],
+            path: "./Tests/Features/LibraryFeatureTests"
         ),
     ]
 )

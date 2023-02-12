@@ -1,5 +1,5 @@
 import ComposableArchitecture
-import FilesFeature
+import LibraryFeature
 import PlayListsFeature
 import StyleGuide
 import UIKit
@@ -38,13 +38,13 @@ public class AppRootViewController: UITabBarController {
                 tabBarSelectedImage: UIImage(systemName: "play.rectangle.fill")
             ),
             makeTabBarViewController(
-                viewController: FilesViewController(
+                viewController: LibraryViewController(
                     store: self.store.scope(
-                        state: \.files,
-                        action: AppRoot.Action.files
+                        state: \.library,
+                        action: AppRoot.Action.library
                     )
                 ),
-                title: "Files",
+                title: "Library",
                 tabBarImage: UIImage(systemName: "folder.badge.plus"),
                 tabBarSelectedImage: UIImage(systemName: "folder.fill.badge.plus")
             ),

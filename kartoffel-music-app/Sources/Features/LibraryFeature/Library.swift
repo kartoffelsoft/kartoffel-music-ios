@@ -1,6 +1,6 @@
 import ComposableArchitecture
 
-public struct Files: ReducerProtocol {
+public struct Library: ReducerProtocol {
     public struct State: Equatable {
         public init() {
             
