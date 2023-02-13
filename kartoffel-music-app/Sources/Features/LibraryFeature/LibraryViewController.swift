@@ -1,10 +1,14 @@
+import Combine
 import ComposableArchitecture
+import GoogleDriveFeature
 import StyleGuide
 import UIKit
+import UIKitUtils
 
 public class LibraryViewController: UIViewController {
     private let store: StoreOf<Library>
     private let viewStore: ViewStoreOf<Library>
+    private var cancellables: [AnyCancellable] = []
     
     private var collectionView: UICollectionView!
     
@@ -21,9 +25,39 @@ public class LibraryViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupNavigation()
         setupNavigationBar()
         setupCollectionView()
         setupConstraints()
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        if !self.isMovingToParent {
+            self.viewStore.send(.navigateToStorageProvider(selection: nil))
+        }
+    }
+    
+    private func setupNavigation() {
+        self.viewStore.publisher.activeStorageProviderId.sink { [weak self] activeStorageProviderId in
+            guard let self = self else { return }
+            guard let activeStorageProviderId = activeStorageProviderId else {
+                _ = self.navigationController?.popToViewController(self, animated: true)
+                return
+            }
+            
+            self.navigationController?.pushViewController(
+                IfLetStoreController(
+                    store: self.store
+                        .scope(state: \.googleDrive, action: Library.Action.googleDrive)
+                ) {
+                    GoogleDriveViewController(store: $0)
+                } else: {
+                    UIViewController()
+                },
+                animated: true
+            )
+        }
+        .store(in: &self.cancellables)
     }
     
     private func setupNavigationBar() {
@@ -204,6 +238,20 @@ extension LibraryViewController: UICollectionViewDelegate {
             return 20
         case .none:
             return 0
+        }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch(Section(rawValue: indexPath.section)) {
+        case .storageProviders:
+            self.viewStore.send(.navigateToStorageProvider(selection: indexPath.row))
+            break
+
+        case .localFiles:
+            break
+            
+        case .none:
+            break
         }
     }
 

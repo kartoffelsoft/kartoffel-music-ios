@@ -3,8 +3,8 @@ import LibraryFeature
 import PlayListsFeature
 
 public struct AppRoot: ReducerProtocol {
+    
     public struct State: Equatable {
-        
         var library: Library.State
         var playLists: PlayLists.State
         

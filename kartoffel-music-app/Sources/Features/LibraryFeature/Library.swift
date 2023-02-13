@@ -1,18 +1,42 @@
 import ComposableArchitecture
+import GoogleDriveFeature
 
 public struct Library: ReducerProtocol {
+    
     public struct State: Equatable {
+        var activeStorageProviderId: Int? = nil
+        var googleDrive: GoogleDrive.State?
+        
         public init() {
-            
+            googleDrive = .init()
         }
     }
     
     public enum Action: Equatable {
-        
+        case navigateToStorageProvider(selection: Int?)
+        case googleDrive(GoogleDrive.Action)
     }
     
     public init() {}
     
-    public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+    public var body: some ReducerProtocol<State, Action> {
+        Reduce { state, action in
+            switch action {
+            case let .navigateToStorageProvider(selection: .some(id)):
+                state.activeStorageProviderId = id
+                state.googleDrive = GoogleDrive.State()
+                return .none
+            case .navigateToStorageProvider(selection: .none):
+                state.activeStorageProviderId = nil
+                state.googleDrive = nil
+                return .none
+            case .googleDrive:
+                return .none
+            }
+        }
+        .ifLet(\.googleDrive, action: /Action.googleDrive) {
+            GoogleDrive()
+        }
     }
+    
 }

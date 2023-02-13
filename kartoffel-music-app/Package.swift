@@ -13,6 +13,10 @@ let package = Package(
             targets: ["AppRootFeature"]
         ),
         .library(
+            name: "GoogleDriveFeature",
+            targets: ["GoogleDriveFeature"]
+        ),
+        .library(
             name: "LibraryFeature",
             targets: ["LibraryFeature"]
         ),
@@ -48,8 +52,16 @@ let package = Package(
             path: "./Sources/Features/AppRootFeature"
         ),
         .target(
+            name: "GoogleDriveFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ],
+            path: "./Sources/Features/GoogleDriveFeature"
+        ),
+        .target(
             name: "LibraryFeature",
             dependencies: [
+                "GoogleDriveFeature",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "./Sources/Features/LibraryFeature",
