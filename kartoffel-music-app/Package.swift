@@ -56,7 +56,8 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
-            path: "./Sources/Features/GoogleDriveFeature"
+            path: "./Sources/Features/GoogleDriveFeature",
+            resources: [.process("Resources/")]
         ),
         .target(
             name: "LibraryFeature",

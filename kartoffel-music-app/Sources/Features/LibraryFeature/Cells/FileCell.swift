@@ -12,7 +12,7 @@ class FileCell: UICollectionViewCell {
 
         name.text = "file1.mp3"
         name.textColor = .theme.primary
-        
+        name.font = .systemFont(ofSize: 20, weight: .regular)
         setupConstraints()
     }
     

@@ -8,8 +8,8 @@ class HeaderReusableView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        title.text = "Header Header"
         title.textColor = .theme.primary
+        title.font = .systemFont(ofSize: 20, weight: .semibold)
         backgroundColor = .theme.background
         setupConstraints()
     }

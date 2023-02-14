@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "logo-google-drive.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

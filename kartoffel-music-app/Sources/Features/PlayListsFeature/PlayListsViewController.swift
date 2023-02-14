@@ -35,10 +35,10 @@ public class PlayListsViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        let titleLabel = UILabel()
-        titleLabel.textColor = .theme.primary
-        titleLabel.text = "Play Lists";
-        titleLabel.font = .systemFont(ofSize: 24, weight: .semibold)
+        let label = UILabel()
+        label.textColor = .theme.primary
+        label.text = "Play Lists";
+        label.font = .systemFont(ofSize: 24, weight: .bold)
         
         let addButton = UIBarButtonItem(
             barButtonSystemItem: .add,
@@ -47,8 +47,8 @@ public class PlayListsViewController: UIViewController {
         )
         addButton.tintColor = .theme.primary
         
-        self.navigationItem.leftBarButtonItem = .init(customView: titleLabel)
-        self.navigationItem.rightBarButtonItems = [ addButton ]
+        navigationItem.leftBarButtonItem = .init(customView: label)
+        navigationItem.rightBarButtonItems = [ addButton ]
     }
     
     private func setupNavigation() {

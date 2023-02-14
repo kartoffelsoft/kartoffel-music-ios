@@ -61,13 +61,13 @@ public class LibraryViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        let titleLabel = UILabel()
-        titleLabel.textColor = .theme.primary
-        titleLabel.text = "Library";
-        titleLabel.font = .systemFont(ofSize: 24, weight: .semibold)
-        
-        self.navigationItem.leftBarButtonItem = .init(customView: titleLabel)
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        let label = UILabel()
+        label.textColor = .theme.primary
+        label.text = "Library";
+        label.font = .systemFont(ofSize: 24, weight: .bold)
+
+        navigationItem.leftBarButtonItem = .init(customView: label)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     private func setupCollectionView() {
@@ -140,7 +140,7 @@ extension LibraryViewController {
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
                     layoutSize: NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .absolute(50.0)
+                        heightDimension: .absolute(52.0)
                     ),
                     elementKind: UICollectionView.elementKindSectionHeader,
                     alignment: .top
@@ -155,7 +155,7 @@ extension LibraryViewController {
                 let item = NSCollectionLayoutItem(
                     layoutSize: .init(
                         widthDimension: .fractionalWidth(1),
-                        heightDimension: .absolute(40)
+                        heightDimension: .absolute(48)
                     )
                 )
 
@@ -218,7 +218,7 @@ extension LibraryViewController: UICollectionViewDelegate {
         
         switch(Section(rawValue: indexPath.section)) {
         case .storageProviders:
-            header.title.text = "Storage Providers"
+            header.title.text = "Download"
         case .localFiles:
             header.title.text = "Local Storage"
         case .none:
