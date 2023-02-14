@@ -67,6 +67,7 @@ public class LibraryViewController: UIViewController {
         titleLabel.font = .systemFont(ofSize: 24, weight: .semibold)
         
         self.navigationItem.leftBarButtonItem = .init(customView: titleLabel)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     private func setupCollectionView() {

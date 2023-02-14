@@ -33,7 +33,6 @@ public class AppRootViewController: UITabBarController {
                         action: AppRoot.Action.playLists
                     )
                 ),
-                title: "Play Lists",
                 tabBarImage: UIImage(systemName: "play.rectangle"),
                 tabBarSelectedImage: UIImage(systemName: "play.rectangle.fill")
             ),
@@ -44,17 +43,14 @@ public class AppRootViewController: UITabBarController {
                         action: AppRoot.Action.library
                     )
                 ),
-                title: "Library",
                 tabBarImage: UIImage(systemName: "folder.badge.plus"),
                 tabBarSelectedImage: UIImage(systemName: "folder.fill.badge.plus")
             ),
         ]
     }
     
-  
     private func makeTabBarViewController(
         viewController: UIViewController,
-        title: String,
         tabBarImage: UIImage?,
         tabBarSelectedImage: UIImage?
     ) -> UIViewController {
