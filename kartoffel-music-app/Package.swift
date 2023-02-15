@@ -38,6 +38,7 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/google/GoogleSignIn-iOS", exact: "7.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.50.0"),
     ],
     targets: [
@@ -47,14 +48,15 @@ let package = Package(
                 "LibraryFeature",
                 "PlayListsFeature",
                 "StyleGuide",
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/Features/AppRootFeature"
         ),
         .target(
             name: "GoogleDriveFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
             ],
             path: "./Sources/Features/GoogleDriveFeature",
             resources: [.process("Resources/")]

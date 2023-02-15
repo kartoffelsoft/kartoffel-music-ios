@@ -39,7 +39,7 @@
 		74FE2A982982BE800049D1EF = {
 			isa = PBXGroup;
 			children = (
-				74FE2ABC2982F6C60049D1EF /* Packages */,
+				74FE2ABD2982F6C60049D1EF /* kartoffel-music-app */,
 				74FE2AA32982BE800049D1EF /* kartoffel-music */,
 				74FE2AA22982BE800049D1EF /* Products */,
 				74FE2ABE2982F7800049D1EF /* Frameworks */,
@@ -64,14 +64,6 @@
 				74FE2AB22982BE830049D1EF /* Info.plist */,
 			);
 			path = "kartoffel-music";
-			sourceTree = "<group>";
-		};
-		74FE2ABC2982F6C60049D1EF /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				74FE2ABD2982F6C60049D1EF /* kartoffel-music-app */,
-			);
-			name = Packages;
 			sourceTree = "<group>";
 		};
 		74FE2ABE2982F7800049D1EF /* Frameworks */ = {
