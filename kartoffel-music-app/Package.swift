@@ -39,6 +39,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/google/GoogleSignIn-iOS", exact: "7.0.0"),
+        .package(url: "https://github.com/google/google-api-objectivec-client-for-rest", exact: "3.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.50.0"),
     ],
     targets: [

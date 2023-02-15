@@ -27,8 +27,28 @@ public class GoogleDriveViewController: UIViewController {
                 print("Error! \(String(describing: error))")
                 return
             }
-            
-            print(signInResult.user)
+
+            let driveScope = "https://www.googleapis.com/auth/drive.readonly"
+            let grantedScopes = signInResult.user.grantedScopes
+            if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
+                let additionalScopes = ["https://www.googleapis.com/auth/drive.readonly"]
+                guard let currentUser = GIDSignIn.sharedInstance.currentUser else {
+                    return
+                }
+
+                currentUser.addScopes(additionalScopes, presenting: self) { signInResult, error in
+                    guard error == nil else { return }
+                    guard let signInResult = signInResult else { return }
+
+                    let grantedScopes = signInResult.user.grantedScopes
+                    if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
+                        print("#: Still not granted")
+                    } else {
+                        print("#: Granted")
+                    }
+                }
+            }
         }
     }
+    
 }
