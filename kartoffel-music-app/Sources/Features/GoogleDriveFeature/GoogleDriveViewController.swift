@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import GoogleSignIn
 import UIKit
 
 public class GoogleDriveViewController: UIViewController {
@@ -18,5 +19,16 @@ public class GoogleDriveViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        GIDSignIn.sharedInstance.signIn(withPresenting: self) { signInResult, error in
+            guard let signInResult = signInResult else {
+                print("Error! \(String(describing: error))")
+                return
+            }
+            
+            print(signInResult.user)
+        }
     }
 }
