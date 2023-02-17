@@ -1,5 +1,4 @@
 import ComposableArchitecture
-import GoogleAuthUseCase
 import GoogleSignIn
 import GoogleUserUseCase
 import UIKit
@@ -18,7 +17,6 @@ public struct GoogleDrive: ReducerProtocol {
         case navigateBack
     }
     
-    @Dependency(\.googleAuthUseCase) var googleAuthUseCase
     @Dependency(\.googleUserUseCase) var googleUserUseCase
     
     public init() {}
