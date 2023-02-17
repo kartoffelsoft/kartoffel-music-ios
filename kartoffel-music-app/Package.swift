@@ -36,10 +36,15 @@ let package = Package(
             name: "UIKitUtils",
             targets: ["UIKitUtils"]
         ),
+
         .library(
             name: "GoogleAuthUseCase",
             targets: ["GoogleAuthUseCase"]
         ),
+        .library(
+            name: "GoogleUserUseCase",
+            targets: ["GoogleUserUseCase"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/google/GoogleSignIn-iOS", exact: "7.0.0"),
@@ -61,6 +66,7 @@ let package = Package(
             name: "GoogleDriveFeature",
             dependencies: [
                 "GoogleAuthUseCase",
+                "GoogleUserUseCase",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
             ],
@@ -106,9 +112,18 @@ let package = Package(
         .target(
             name: "GoogleAuthUseCase",
             dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
             ],
             path: "./Sources/UseCases/GoogleAuthUseCase"
+        ),
+        .target(
+            name: "GoogleUserUseCase",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
+            ],
+            path: "./Sources/UseCases/GoogleUserUseCase"
         ),
         .testTarget(
             name: "LibraryFeatureTests",

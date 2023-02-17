@@ -1,8 +1,10 @@
-//
-//  File.swift
-//  
-//
-//  Created by Harry Lee on 17.02.23.
-//
+import ComposableArchitecture
 
-import Foundation
+extension GoogleUserUseCase: DependencyKey {
+    
+    static public var liveValue = GoogleUserUseCase(
+        start: {
+            return nil
+        }
+    )
+}

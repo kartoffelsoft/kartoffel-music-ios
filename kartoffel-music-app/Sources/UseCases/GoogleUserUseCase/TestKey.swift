@@ -1,8 +1,19 @@
-//
-//  File.swift
-//  
-//
-//  Created by Harry Lee on 17.02.23.
-//
+import ComposableArchitecture
+import XCTestDynamicOverlay
 
-import Foundation
+extension DependencyValues {
+    
+    public var googleUserUseCase: GoogleUserUseCase {
+        get { self[GoogleUserUseCase.self] }
+        set { self[GoogleUserUseCase.self] = newValue }
+    }
+    
+}
+
+extension GoogleUserUseCase: TestDependencyKey {
+    
+    static public var testValue = GoogleUserUseCase(
+        start: XCTUnimplemented("\(GoogleUserUseCase.self).start")
+    )
+    
+}

@@ -1,8 +1,12 @@
-//
-//  File.swift
-//  
-//
-//  Created by Harry Lee on 16.02.23.
-//
+import ComposableArchitecture
+import GoogleSignIn
 
-import Foundation
+public class GoogleUserUseCase {
+    
+    public var start: () async throws -> GIDGoogleUser? 
+    
+    init(start: @escaping () async throws -> GIDGoogleUser?) {
+        self.start = start
+    }
+    
+}
