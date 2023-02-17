@@ -31,11 +31,11 @@ public class GoogleDriveViewController: UIViewController {
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-//        guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else {
-//            return
-//        }
+        if !self.isMovingToParent {
+            self.viewStore.send(.navigateBack)
+        }
         
-        viewStore.send(.authenticate)
+        viewStore.send(.requestAuthFromLocal)
     }
     
     private func setupGoogleSignIn() {
@@ -50,18 +50,6 @@ public class GoogleDriveViewController: UIViewController {
             }
                     
             self.googleSignInController.signIn(withPresenting: rootViewController)
-            
-//            self.navigationController?.pushViewController(
-//                IfLetStoreController(
-//                    store: self.store
-//                        .scope(state: \.googleDrive, action: Library.Action.googleDrive)
-//                ) {
-//                    GoogleDriveViewController(store: $0)
-//                } else: {
-//                    UIViewController()
-//                },
-//                animated: true
-//            )
         }
         .store(in: &self.cancellables)
     }
@@ -73,12 +61,13 @@ extension GoogleDriveViewController: GoogleSignInControllerDelegate {
     func didFinishSignInProcess(result: Result<GIDGoogleUser, Error>) {
         switch(result) {
         case let .success(user):
-            print("Success")
-            print(user)
+            viewStore.send(.receiveAuthFromRemote(user))
+//            print("Success")
+//            print(user)
             break
             
         case let .failure(error):
-            print("Failed: ", error.localizedDescription)
+            print("[ERROR]: ", error.localizedDescription)
             break
         }
     }

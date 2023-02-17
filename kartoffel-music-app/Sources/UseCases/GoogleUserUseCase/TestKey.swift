@@ -13,7 +13,8 @@ extension DependencyValues {
 extension GoogleUserUseCase: TestDependencyKey {
     
     static public var testValue = GoogleUserUseCase(
-        start: XCTUnimplemented("\(GoogleUserUseCase.self).start")
+        start: XCTUnimplemented("\(GoogleUserUseCase.self).start"),
+        store: XCTUnimplemented("\(GoogleUserUseCase.self).store")
     )
     
 }
