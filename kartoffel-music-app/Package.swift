@@ -38,8 +38,8 @@ let package = Package(
         ),
 
         .library(
-            name: "GoogleUserUseCase",
-            targets: ["GoogleUserUseCase"]
+            name: "GoogleDriveUseCase",
+            targets: ["GoogleDriveUseCase"]
         )
     ],
     dependencies: [
@@ -61,7 +61,7 @@ let package = Package(
         .target(
             name: "GoogleDriveFeature",
             dependencies: [
-                "GoogleUserUseCase",
+                "GoogleDriveUseCase",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
             ],
@@ -105,12 +105,12 @@ let package = Package(
             ]
         ),
         .target(
-            name: "GoogleUserUseCase",
+            name: "GoogleDriveUseCase",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
             ],
-            path: "./Sources/UseCases/GoogleUserUseCase"
+            path: "./Sources/UseCases/GoogleDriveUseCase"
         ),
         .testTarget(
             name: "LibraryFeatureTests",

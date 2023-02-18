@@ -1,6 +1,6 @@
 import ComposableArchitecture
 import GoogleSignIn
-import GoogleUserUseCase
+import GoogleDriveUseCase
 import UIKit
 
 public struct GoogleDrive: ReducerProtocol {
@@ -9,18 +9,21 @@ public struct GoogleDrive: ReducerProtocol {
     }
     
     public enum Action: Equatable {
-        case requestFileList(GIDGoogleUser?)
+        case requestFiles(GIDGoogleUser?)
     }
+    
+    @Dependency(\.googleDriveUseCase) var googleDriveUseCase
     
     public init() {}
     
     public var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
-            case let .requestFileList(user):
+            case let .requestFiles(user):
                 guard let user = user else {
                     return .none
                 }
+
                 return .none
             }
         }

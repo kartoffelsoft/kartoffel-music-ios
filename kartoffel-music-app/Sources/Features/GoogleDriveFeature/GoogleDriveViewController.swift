@@ -42,7 +42,7 @@ public class GoogleDriveViewController: UIViewController {
 extension GoogleDriveViewController: GoogleSignInControllerDelegate {
     
     func didCompleteSignIn(user: GIDGoogleUser?) {
-        viewStore.send(.requestFileList(user))
+        viewStore.send(.requestFiles(user))
     }
     
 }
