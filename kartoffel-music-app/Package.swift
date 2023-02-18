@@ -43,8 +43,8 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/google/GoogleSignIn-iOS", exact: "7.0.0"),
         .package(url: "https://github.com/google/google-api-objectivec-client-for-rest", exact: "3.0.0"),
+        .package(url: "https://github.com/google/GoogleSignIn-iOS", exact: "7.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.50.0"),
     ],
     targets: [
@@ -107,8 +107,12 @@ let package = Package(
         .target(
             name: "GoogleDriveUseCase",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(
+                    name: "GoogleAPIClientForREST_Drive",
+                    package: "google-api-objectivec-client-for-rest"
+                ),
                 .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/GoogleDriveUseCase"
         ),

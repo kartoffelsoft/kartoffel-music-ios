@@ -24,7 +24,6 @@ public class GoogleDriveViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupGoogleSignIn()
     }
     
