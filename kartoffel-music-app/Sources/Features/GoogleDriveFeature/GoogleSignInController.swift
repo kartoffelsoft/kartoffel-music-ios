@@ -2,7 +2,7 @@ import GoogleSignIn
 
 protocol GoogleSignInControllerDelegate: AnyObject {
     
-    func didFinishSignInProcess(result: Result<GIDGoogleUser, Error>)
+    func didCompleteSignIn(user: GIDGoogleUser?)
     
 }
 
@@ -12,38 +12,63 @@ class GoogleSignInController {
     
     init() {}
     
-    public func signIn(withPresenting: UIViewController) {
-        GIDSignIn.sharedInstance.signIn(withPresenting: withPresenting) { [weak self] signInResult, error in
-            guard let self = self else { return }
-            guard let signInResult = signInResult else {
-                self.delegate?.didFinishSignInProcess(result: .failure(error ?? NSError()))
+    public func authenticate() {
+        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
+            GIDSignIn.sharedInstance.restorePreviousSignIn() { [weak self] user, _ in
+                guard let _ = user else {
+                    self?.delegate?.didCompleteSignIn(user: nil)
+                    return
+                }
+                
+                GIDSignIn.sharedInstance.currentUser?.refreshTokensIfNeeded() { [weak self] user, _ in
+                    self?.delegate?.didCompleteSignIn(user: user)
+                }
+            }
+        } else {
+            signIn()
+        }
+    }
+    
+    private func signIn() {
+        guard let root = UIApplication.shared.windows.first?.rootViewController else {
+            self.delegate?.didCompleteSignIn(user: nil)
+            return
+        }
+        
+        GIDSignIn.sharedInstance.signIn(withPresenting: root) { [weak self] result, error in
+            guard let result = result else {
+                self?.delegate?.didCompleteSignIn(user: nil)
                 return
             }
             
             let driveScope = "https://www.googleapis.com/auth/drive.readonly"
-            let grantedScopes = signInResult.user.grantedScopes
-            
-            if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
-                let additionalScopes = ["https://www.googleapis.com/auth/drive.readonly"]
-                guard let currentUser = GIDSignIn.sharedInstance.currentUser else { return }
-            
-                currentUser.addScopes(additionalScopes, presenting: withPresenting) { [weak self] signInResult, error in
-                    guard let self = self else { return }
-                    guard let signInResult = signInResult else {
-                        self.delegate?.didFinishSignInProcess(result: .failure(error ?? NSError()))
+
+            guard let grantedScopes = result.user.grantedScopes,
+                  grantedScopes.contains(driveScope) else {
+                guard let currentUser = GIDSignIn.sharedInstance.currentUser else {
+                    self?.delegate?.didCompleteSignIn(user: nil)
+                    return
+                }
+                
+                currentUser.addScopes([driveScope], presenting: root) { [weak self] result, error in
+                    guard let result = result else {
+                        self?.delegate?.didCompleteSignIn(user: nil)
                         return
                     }
                     
-                    let grantedScopes = signInResult.user.grantedScopes
-                    if grantedScopes == nil || !grantedScopes!.contains(driveScope) {
-                        self.delegate?.didFinishSignInProcess(result: .failure(error ?? NSError()))
-                    } else {
-                        self.delegate?.didFinishSignInProcess(result: .success(signInResult.user))
+                    guard let grantedScopes = result.user.grantedScopes,
+                          grantedScopes.contains(driveScope) else {
+                        self?.delegate?.didCompleteSignIn(user: nil)
+                        return
                     }
+     
+                    self?.delegate?.didCompleteSignIn(user: result.user)
                 }
-            } else {
-                self.delegate?.didFinishSignInProcess(result: .success(signInResult.user))
+                return
             }
+
+            self?.delegate?.didCompleteSignIn(user: result.user)
         }
     }
+    
 }

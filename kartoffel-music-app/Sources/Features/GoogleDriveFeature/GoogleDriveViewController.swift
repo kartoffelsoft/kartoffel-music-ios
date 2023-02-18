@@ -43,13 +43,7 @@ public class GoogleDriveViewController: UIViewController {
         
         self.viewStore.publisher.needsSignIn.sink { [weak self] needsSignIn in
             guard needsSignIn else { return }
-            
-            guard let self = self else { return }
-            guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else {
-                return
-            }
-                    
-            self.googleSignInController.signIn(withPresenting: rootViewController)
+            self?.googleSignInController.authenticate()
         }
         .store(in: &self.cancellables)
     }
@@ -58,18 +52,9 @@ public class GoogleDriveViewController: UIViewController {
 
 extension GoogleDriveViewController: GoogleSignInControllerDelegate {
     
-    func didFinishSignInProcess(result: Result<GIDGoogleUser, Error>) {
-        switch(result) {
-        case let .success(user):
-            viewStore.send(.receiveAuthFromRemote(user))
-//            print("Success")
-//            print(user)
-            break
-            
-        case let .failure(error):
-            print("[ERROR]: ", error.localizedDescription)
-            break
-        }
+    func didCompleteSignIn(user: GIDGoogleUser?) {
+        print("# didCompleteSignIn: ", user)
+//        viewStore.send(.receiveAuthFromRemote(user))
     }
     
 }
