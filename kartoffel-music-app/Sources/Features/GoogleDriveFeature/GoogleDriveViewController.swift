@@ -30,22 +30,11 @@ public class GoogleDriveViewController: UIViewController {
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if !self.isMovingToParent {
-            self.viewStore.send(.navigateBack)
-        }
-        
-        viewStore.send(.requestAuthFromLocal)
+        googleSignInController.authenticate()
     }
     
     private func setupGoogleSignIn() {
         googleSignInController.delegate = self
-        
-        self.viewStore.publisher.needsSignIn.sink { [weak self] needsSignIn in
-            guard needsSignIn else { return }
-            self?.googleSignInController.authenticate()
-        }
-        .store(in: &self.cancellables)
     }
     
 }
@@ -53,8 +42,7 @@ public class GoogleDriveViewController: UIViewController {
 extension GoogleDriveViewController: GoogleSignInControllerDelegate {
     
     func didCompleteSignIn(user: GIDGoogleUser?) {
-        print("# didCompleteSignIn: ", user)
-//        viewStore.send(.receiveAuthFromRemote(user))
+        viewStore.send(.requestFileList(user))
     }
     
 }
