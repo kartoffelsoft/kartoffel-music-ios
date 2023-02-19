@@ -67,6 +67,7 @@ let package = Package(
             dependencies: [
                 "CommonModels",
                 "GoogleDriveUseCase",
+                "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
             ],

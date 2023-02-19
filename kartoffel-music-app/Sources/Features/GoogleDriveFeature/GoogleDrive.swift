@@ -26,15 +26,7 @@ public struct GoogleDrive: ReducerProtocol {
             case .initialize:
                 googleDriveUseCase.setAuthorizer()
                 return .none
-//            case let .receiveAuthFromLocal(.success(user)):
-//                guard let user = user else {
-//                    state.needsSignIn = true
-//                    return .none
-//                }
-//                return .run { send in
-//                    await send(.requestFileList(user))
-//                }
-                
+
             case .requestFiles:
                 return .task {
                     await .receiveFiles(TaskResult {

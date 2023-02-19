@@ -1,8 +1,8 @@
 
-public struct FileModel: Codable, Equatable {
+public struct FileModel: Equatable, Hashable {
     
-    let id: String
-    let name: String
+    public let id: String
+    public let name: String
     
     public init(
         id: String,
