@@ -38,6 +38,10 @@ let package = Package(
         ),
 
         .library(
+            name: "CommonModels",
+            targets: ["CommonModels"]
+        ),
+        .library(
             name: "GoogleDriveUseCase",
             targets: ["GoogleDriveUseCase"]
         )
@@ -61,6 +65,7 @@ let package = Package(
         .target(
             name: "GoogleDriveFeature",
             dependencies: [
+                "CommonModels",
                 "GoogleDriveUseCase",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS"),
@@ -105,8 +110,12 @@ let package = Package(
             ]
         ),
         .target(
+            name: "CommonModels"
+        ),
+        .target(
             name: "GoogleDriveUseCase",
             dependencies: [
+                "CommonModels",
                 .product(
                     name: "GoogleAPIClientForREST_Drive",
                     package: "google-api-objectivec-client-for-rest"
