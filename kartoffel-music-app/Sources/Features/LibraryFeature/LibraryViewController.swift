@@ -10,7 +10,7 @@ public class LibraryViewController: UIViewController {
     private let viewStore: ViewStoreOf<Library>
     private var cancellables: [AnyCancellable] = []
     
-    private var collectionView: UICollectionView!
+    private let collectionView = LibraryCollectionView()
     
     public init(store: StoreOf<Library>) {
         self.store = store
@@ -71,10 +71,6 @@ public class LibraryViewController: UIViewController {
     }
     
     private func setupCollectionView() {
-        collectionView = UICollectionView(
-            frame: .zero,
-            collectionViewLayout: createCollectionViewLayout()
-        )
         collectionView.backgroundColor = .theme.background
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -108,99 +104,7 @@ public class LibraryViewController: UIViewController {
     
 }
 
-extension LibraryViewController {
-    private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
-        return UICollectionViewCompositionalLayout { section, _ in
-            let padding: CGFloat = 8
-            
-            switch(Section(rawValue: section)) {
-            case .storageProviders:
-                let item = NSCollectionLayoutItem(
-                    layoutSize: .init(
-                        widthDimension: .fractionalWidth(0.33),
-                        heightDimension: .fractionalHeight(1)
-                    )
-                )
-                
-                item.contentInsets = .init(
-                    top: padding,
-                    leading: padding,
-                    bottom: padding,
-                    trailing: padding
-                )
-                
-                let group = NSCollectionLayoutGroup.horizontal(
-                    layoutSize: .init(
-                        widthDimension: .fractionalWidth(1),
-                        heightDimension: .absolute(120)
-                    ),
-                    subitems: [ item ]
-                )
-                
-                let header = NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .absolute(52.0)
-                    ),
-                    elementKind: UICollectionView.elementKindSectionHeader,
-                    alignment: .top
-                )
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.boundarySupplementaryItems = [ header ]
-                section.orthogonalScrollingBehavior = .continuous
-                return section
-
-            case .localFiles:
-                let item = NSCollectionLayoutItem(
-                    layoutSize: .init(
-                        widthDimension: .fractionalWidth(1),
-                        heightDimension: .absolute(48)
-                    )
-                )
-
-                item.contentInsets = .init(
-                    top: padding,
-                    leading: padding,
-                    bottom: padding,
-                    trailing: padding
-                )
-
-                let group = NSCollectionLayoutGroup.horizontal(
-                    layoutSize: .init(
-                        widthDimension: .fractionalWidth(1),
-                        heightDimension: .estimated(500)
-                    ),
-                    subitems: [ item ]
-                )
-
-                let header = NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .absolute(50.0)
-                    ),
-                    elementKind: UICollectionView.elementKindSectionHeader,
-                    alignment: .top
-                )
-                header.pinToVisibleBounds = true
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.boundarySupplementaryItems = [ header ]
-                return section
-
-            default:
-                return nil
-            }
-        }
-    }
-}
-
 extension LibraryViewController: UICollectionViewDelegate {
-    
-    private enum Section: Int, CaseIterable {
-        case storageProviders
-        case localFiles
-    }
     
     public func numberOfSections(
         in collectionView: UICollectionView
