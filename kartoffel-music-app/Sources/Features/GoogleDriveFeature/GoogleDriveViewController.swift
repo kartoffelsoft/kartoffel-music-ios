@@ -15,10 +15,19 @@ public class GoogleDriveViewController: UIViewController {
     private let viewStore: ViewStoreOf<GoogleDrive>
     
     private let googleSignInController = GoogleSignInController()
+    private let downloadButton = {
+        let button = UIButton()
+        button.setTitle("DOWNLOAD", for: .normal)
+        button.setTitleColor(.theme.background, for: .normal)
+        button.setTitleColor(.theme.primary, for: .disabled)
+        button.backgroundColor = .theme.background300
+        button.isEnabled = false
+        return button
+    }()
     
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, FileModel>!
-    
+
     private var cancellables: [AnyCancellable] = []
 
     public init(store: StoreOf<GoogleDrive>) {
@@ -33,6 +42,7 @@ public class GoogleDriveViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupBindings()
         setupNavigationBar()
         setupGoogleSignIn()
@@ -55,6 +65,12 @@ public class GoogleDriveViewController: UIViewController {
             self?.dataSource.apply(snapshot, animatingDifferences: true)
         }
         .store(in: &self.cancellables)
+        
+        downloadButton.addTarget(
+            self,
+            action: #selector(handleDownloadButtonTap),
+            for: .touchUpInside
+        )
     }
     
     private func setupNavigationBar() {
@@ -117,20 +133,31 @@ public class GoogleDriveViewController: UIViewController {
     
     private func setupConstraints() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        downloadButton.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(collectionView)
+        view.addSubview(downloadButton)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: downloadButton.topAnchor),
+            
+            downloadButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            downloadButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            downloadButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            downloadButton.heightAnchor.constraint(equalToConstant: 44),
         ])
     }
     
     @objc private func handleSignOutButtonTap() {
         googleSignInController.signOut()
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func handleDownloadButtonTap() {
+        
     }
 }
 
