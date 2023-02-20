@@ -80,13 +80,18 @@ public class GoogleDriveViewController: UIViewController {
             content.text = file.name
             content.textProperties.color = .theme.primary
             cell.contentConfiguration = content
-            cell.backgroundConfiguration?.backgroundColor = .clear
-            cell.accessories = [.disclosureIndicator()]
+            cell.backgroundConfiguration?.backgroundColor = .theme.background
+            cell.accessories = [
+                .multiselect(
+                    displayed: .always,
+                    options: UICellAccessory.MultiselectOptions(tintColor: .theme.primary)
+                )
+            ]
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, FileModel>(
             collectionView: collectionView,
-            cellProvider: { [unowned self] collectionView, indexPath, file in
+            cellProvider: { collectionView, indexPath, file in
                 return collectionView.dequeueConfiguredReusableCell(
                     using: cellRegistration,
                     for: indexPath,
