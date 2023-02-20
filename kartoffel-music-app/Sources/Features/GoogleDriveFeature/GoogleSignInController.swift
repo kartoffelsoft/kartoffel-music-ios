@@ -29,6 +29,10 @@ class GoogleSignInController {
         }
     }
     
+    public func signOut() {
+        GIDSignIn.sharedInstance.signOut()
+    }
+    
     private func signIn() {
         guard let root = UIApplication.shared.windows.first?.rootViewController else {
             self.delegate?.didCompleteSignIn(user: nil)

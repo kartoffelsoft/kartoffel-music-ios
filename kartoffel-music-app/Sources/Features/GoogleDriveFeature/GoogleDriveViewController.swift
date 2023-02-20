@@ -34,6 +34,7 @@ public class GoogleDriveViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupBindings()
+        setupNavigationBar()
         setupGoogleSignIn()
         setupCollectionView()
         setupDatasource()
@@ -54,6 +55,19 @@ public class GoogleDriveViewController: UIViewController {
             self?.dataSource.apply(snapshot, animatingDifferences: true)
         }
         .store(in: &self.cancellables)
+    }
+    
+    private func setupNavigationBar() {
+        let signOutButton = UIBarButtonItem(
+            image: .init(systemName: "rectangle.portrait.and.arrow.forward"),
+            style: .plain,
+            target: self,
+            action: #selector(handleSignOutButtonTap)
+        )
+
+        signOutButton.tintColor = .theme.primary
+
+        parent?.navigationItem.rightBarButtonItems = [ signOutButton ]
     }
     
     private func setupGoogleSignIn() {
@@ -114,6 +128,10 @@ public class GoogleDriveViewController: UIViewController {
         ])
     }
     
+    @objc private func handleSignOutButtonTap() {
+        googleSignInController.signOut()
+        navigationController?.popViewController(animated: true)
+    }
 }
 
 extension GoogleDriveViewController: GoogleSignInControllerDelegate {
