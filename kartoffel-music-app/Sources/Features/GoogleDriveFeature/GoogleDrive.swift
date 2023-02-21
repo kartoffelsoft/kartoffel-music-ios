@@ -6,7 +6,7 @@ import UIKit
 
 public struct GoogleDrive: ReducerProtocol {
     public struct State: Equatable {
-        var files: [FileModel]?
+        var files: [FileViewModel]?
         public init() {}
     }
     
@@ -14,6 +14,8 @@ public struct GoogleDrive: ReducerProtocol {
         case initialize
         case requestFiles
         case receiveFiles(TaskResult<[FileModel]>)
+        
+        case didSelectItemAt(Int)
     }
     
     @Dependency(\.googleDriveUseCase) var googleDriveUseCase
@@ -35,10 +37,24 @@ public struct GoogleDrive: ReducerProtocol {
                 }
                 
             case let .receiveFiles(.success(files)):
-                state.files = files
+                state.files = files.map({
+                    FileViewModel(id: $0.id, name: $0.name)
+                })
                 return .none
                 
             case let .receiveFiles(.failure(error)):
+                return .none
+                
+            case let .didSelectItemAt(index):
+                switch state.files?[index].downloadState {
+                case .nothing:
+                    state.files?[index].downloadState = .selected
+                case .selected:
+                    state.files?[index].downloadState = .nothing
+                default:
+                    ()
+                }
+                
                 return .none
             }
         }

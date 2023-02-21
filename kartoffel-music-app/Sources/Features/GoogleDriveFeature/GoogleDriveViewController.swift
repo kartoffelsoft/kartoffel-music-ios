@@ -26,7 +26,7 @@ public class GoogleDriveViewController: UIViewController {
     }()
     
     private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<Section, FileModel>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, FileViewModel>!
 
     private var cancellables: [AnyCancellable] = []
 
@@ -59,10 +59,10 @@ public class GoogleDriveViewController: UIViewController {
     private func setupBindings() {
         self.viewStore.publisher.files.sink { [weak self] files in
             guard let files = files else { return }
-            var snapshot = NSDiffableDataSourceSnapshot<Section, FileModel>()
+            var snapshot = NSDiffableDataSourceSnapshot<Section, FileViewModel>()
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems(files)
-            self?.dataSource.apply(snapshot, animatingDifferences: true)
+            self?.dataSource.apply(snapshot, animatingDifferences: false)
         }
         .store(in: &self.cancellables)
         
@@ -98,28 +98,29 @@ public class GoogleDriveViewController: UIViewController {
             frame: .zero,
             collectionViewLayout: UICollectionViewCompositionalLayout.list(using: configuration)
         )
-        collectionView.allowsSelection = false
-        collectionView.backgroundColor = .clear
-        collectionView.backgroundView?.backgroundColor = .red
-        collectionView.keyboardDismissMode = .interactive
+        collectionView.delegate = self
+        collectionView.backgroundColor = .theme.background
     }
     
     private func setupDatasource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, FileModel> { cell, _, file in
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, FileViewModel> { cell, _, file in
             var content = cell.defaultContentConfiguration()
             content.text = file.name
             content.textProperties.color = .theme.primary
             cell.contentConfiguration = content
             cell.backgroundConfiguration?.backgroundColor = .theme.background
             cell.accessories = [
-                .multiselect(
-                    displayed: .always,
-                    options: UICellAccessory.MultiselectOptions(tintColor: .theme.primary)
+                .customView(
+                    configuration: UICellAccessory.CustomViewConfiguration(
+                        customView: DownloadAccessoryView(state: file.downloadState),
+                        placement: .trailing(displayed: .always),
+                        tintColor: .theme.primary
+                    )
                 )
             ]
         }
         
-        dataSource = UICollectionViewDiffableDataSource<Section, FileModel>(
+        dataSource = UICollectionViewDiffableDataSource<Section, FileViewModel>(
             collectionView: collectionView,
             cellProvider: { collectionView, indexPath, file in
                 return collectionView.dequeueConfiguredReusableCell(
@@ -159,6 +160,14 @@ public class GoogleDriveViewController: UIViewController {
     @objc private func handleDownloadButtonTap() {
         
     }
+}
+
+extension GoogleDriveViewController: UICollectionViewDelegate {
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewStore.send(.didSelectItemAt(indexPath.row))
+    }
+    
 }
 
 extension GoogleDriveViewController: GoogleSignInControllerDelegate {
