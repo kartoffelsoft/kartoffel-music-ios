@@ -49,7 +49,7 @@ class DownloadAccessoryView: UIView {
                     )
                 )
             )
-            imageView.tintColor = .theme.background
+            imageView.tintColor = .theme.primary
             imageView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(imageView)
             NSLayoutConstraint.activate([

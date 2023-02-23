@@ -71,10 +71,10 @@ public class GoogleDriveViewController: UIViewController {
             target: self,
             action: #selector(handleSignOutButtonTap)
         )
-
         signOutButton.tintColor = .theme.primary
-
         parent?.navigationItem.rightBarButtonItems = [ signOutButton ]
+        
+        tabBarController?.tabBar.isHidden = true
     }
     
     private func setupGoogleSignIn() {

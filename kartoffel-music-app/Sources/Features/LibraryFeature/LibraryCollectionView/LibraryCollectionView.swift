@@ -17,8 +17,6 @@ class LibraryCollectionView: UICollectionView {
 
 private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
     return UICollectionViewCompositionalLayout { section, _ in
-        let padding: CGFloat = 8
-        
         switch(Section(rawValue: section)) {
         case .storageProviders:
             let item = NSCollectionLayoutItem(
@@ -28,13 +26,6 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 )
             )
             
-            item.contentInsets = .init(
-                top: padding,
-                leading: padding,
-                bottom: padding,
-                trailing: padding
-            )
-            
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: .init(
                     widthDimension: .fractionalWidth(1),
@@ -42,6 +33,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 ),
                 subitems: [ item ]
             )
+            group.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
             
             let header = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: NSCollectionLayoutSize(
@@ -51,6 +43,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 elementKind: UICollectionView.elementKindSectionHeader,
                 alignment: .top
             )
+            header.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
             
             let section = NSCollectionLayoutSection(group: group)
             section.boundarySupplementaryItems = [ header ]
@@ -64,14 +57,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                     heightDimension: .absolute(48)
                 )
             )
-
-            item.contentInsets = .init(
-                top: padding,
-                leading: padding,
-                bottom: padding,
-                trailing: padding
-            )
-
+            
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: .init(
                     widthDimension: .fractionalWidth(1),
@@ -79,6 +65,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 ),
                 subitems: [ item ]
             )
+            group.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
 
             let header = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: NSCollectionLayoutSize(
@@ -88,6 +75,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 elementKind: UICollectionView.elementKindSectionHeader,
                 alignment: .top
             )
+            header.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
             header.pinToVisibleBounds = true
             
             let section = NSCollectionLayoutSection(group: group)

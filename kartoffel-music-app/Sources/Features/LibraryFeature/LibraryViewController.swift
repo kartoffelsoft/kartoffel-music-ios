@@ -31,6 +31,11 @@ public class LibraryViewController: UIViewController {
         setupConstraints()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     public override func viewDidAppear(_ animated: Bool) {
         if !self.isMovingToParent {
             self.viewStore.send(.navigateToStorageProvider(selection: nil))

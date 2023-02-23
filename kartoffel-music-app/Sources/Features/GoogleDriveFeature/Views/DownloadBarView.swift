@@ -1,9 +1,11 @@
+import StyleGuide
 import UIKit
 
 class DownloadBarView: UIView {
 
     private let downloadButton = {
         let button = UIButton()
+        button.titleLabel?.font = .theme.caption1
         return button
     }()
     
@@ -56,13 +58,13 @@ class DownloadBarView: UIView {
             downloadButton.isHidden = false
             downloadingView.isHidden = true
             downloadButton.setTitle("Download", for: .normal)
-            downloadButton.setTitleColor(.theme.background, for: .normal)
+            downloadButton.setTitleColor(.theme.primary, for: .normal)
             downloadButton.backgroundColor = .theme.background300
         case let .selected(count):
             downloadButton.isHidden = false
             downloadingView.isHidden = true
-            downloadButton.setTitle("Download(\(count))", for: .normal)
-            downloadButton.setTitleColor(.theme.background, for: .normal)
+            downloadButton.setTitle("Download (\(count))", for: .normal)
+            downloadButton.setTitleColor(.theme.primary, for: .normal)
             downloadButton.backgroundColor = .theme.secondary
         case let .downloading(current, count):
             downloadButton.isHidden = true
