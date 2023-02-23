@@ -7,6 +7,7 @@ import UIKit
 public struct GoogleDrive: ReducerProtocol {
     public struct State: Equatable {
         var files: [FileViewModel]?
+        var downloadBar: DownloadBarViewModel = .nothing
         public init() {}
     }
     
@@ -46,14 +47,18 @@ public struct GoogleDrive: ReducerProtocol {
                 return .none
                 
             case let .didSelectItemAt(index):
-                switch state.files?[index].downloadState {
+                switch state.files?[index].accessoryViewModel {
                 case .nothing:
-                    state.files?[index].downloadState = .selected
+                    state.files?[index].accessoryViewModel = .selected
                 case .selected:
-                    state.files?[index].downloadState = .nothing
+                    state.files?[index].accessoryViewModel = .nothing
                 default:
                     ()
                 }
+                
+                guard let files = state.files else { return .none }
+                let count = files.filter { $0.accessoryViewModel == .selected }.count
+                state.downloadBar = count == 0 ? .nothing : .selected(count)
                 
                 return .none
             }

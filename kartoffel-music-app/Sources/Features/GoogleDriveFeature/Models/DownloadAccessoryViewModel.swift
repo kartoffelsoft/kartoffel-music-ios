@@ -1,4 +1,4 @@
-enum DownloadStateViewModel: Equatable, Hashable {
+enum DownloadAccessoryViewModel: Equatable, Hashable {
     case nothing
     case selected
     case downloading(Int)

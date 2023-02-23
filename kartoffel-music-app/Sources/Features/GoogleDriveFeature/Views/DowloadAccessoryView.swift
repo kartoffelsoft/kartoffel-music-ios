@@ -3,10 +3,10 @@ import StyleGuide
 
 class DownloadAccessoryView: UIView {
     
-    private let state: DownloadStateViewModel
+    private let state: DownloadAccessoryViewModel
     private var backgroundLayer = CAShapeLayer()
     
-    init(state: DownloadStateViewModel) {
+    init(state: DownloadAccessoryViewModel) {
         self.state = state
         super.init(frame: .zero)
     }

@@ -15,16 +15,8 @@ public class GoogleDriveViewController: UIViewController {
     private let viewStore: ViewStoreOf<GoogleDrive>
     
     private let googleSignInController = GoogleSignInController()
-    private let downloadButton = {
-        let button = UIButton()
-        button.setTitle("DOWNLOAD", for: .normal)
-        button.setTitleColor(.theme.background, for: .normal)
-        button.setTitleColor(.theme.primary, for: .disabled)
-        button.backgroundColor = .theme.background300
-        button.isEnabled = false
-        return button
-    }()
-    
+    private let downloadBarView = DownloadBarView()
+
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, FileViewModel>!
 
@@ -66,11 +58,10 @@ public class GoogleDriveViewController: UIViewController {
         }
         .store(in: &self.cancellables)
         
-        downloadButton.addTarget(
-            self,
-            action: #selector(handleDownloadButtonTap),
-            for: .touchUpInside
-        )
+        self.viewStore.publisher.downloadBar.sink { [weak self] downloadBar in
+            self?.downloadBarView.render(with: downloadBar)
+        }
+        .store(in: &self.cancellables)
     }
     
     private func setupNavigationBar() {
@@ -112,7 +103,7 @@ public class GoogleDriveViewController: UIViewController {
             cell.accessories = [
                 .customView(
                     configuration: UICellAccessory.CustomViewConfiguration(
-                        customView: DownloadAccessoryView(state: file.downloadState),
+                        customView: DownloadAccessoryView(state: file.accessoryViewModel),
                         placement: .trailing(displayed: .always),
                         tintColor: .theme.primary
                     )
@@ -134,21 +125,21 @@ public class GoogleDriveViewController: UIViewController {
     
     private func setupConstraints() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        downloadButton.translatesAutoresizingMaskIntoConstraints = false
+        downloadBarView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(collectionView)
-        view.addSubview(downloadButton)
+        view.addSubview(downloadBarView)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: downloadButton.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            downloadButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            downloadButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            downloadButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            downloadButton.heightAnchor.constraint(equalToConstant: 44),
+            downloadBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            downloadBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            downloadBarView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            downloadBarView.heightAnchor.constraint(equalToConstant: 56),
         ])
     }
     
@@ -157,9 +148,6 @@ public class GoogleDriveViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    @objc private func handleDownloadButtonTap() {
-        
-    }
 }
 
 extension GoogleDriveViewController: UICollectionViewDelegate {
