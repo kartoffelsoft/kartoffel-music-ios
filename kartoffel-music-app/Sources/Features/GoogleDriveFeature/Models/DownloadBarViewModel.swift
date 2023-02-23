@@ -2,5 +2,5 @@ enum DownloadBarViewModel: Equatable, Hashable {
     case nothing
     case selected(Int)
     case downloading(Int, Int)
-    case completed
+    case paused(Int, Int)
 }

@@ -37,10 +37,13 @@ public class GoogleDriveViewController: UIViewController {
         
         setupBindings()
         setupNavigationBar()
-        setupGoogleSignIn()
         setupCollectionView()
         setupDatasource()
         setupConstraints()
+        
+        collectionView.delegate = self
+        googleSignInController.delegate = self
+        downloadBarView.delegate = self
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -77,10 +80,6 @@ public class GoogleDriveViewController: UIViewController {
         tabBarController?.tabBar.isHidden = true
     }
     
-    private func setupGoogleSignIn() {
-        googleSignInController.delegate = self
-    }
-    
     private func setupCollectionView() {
         var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         configuration.backgroundColor = .clear
@@ -89,7 +88,6 @@ public class GoogleDriveViewController: UIViewController {
             frame: .zero,
             collectionViewLayout: UICollectionViewCompositionalLayout.list(using: configuration)
         )
-        collectionView.delegate = self
         collectionView.backgroundColor = .theme.background
     }
     
@@ -164,6 +162,22 @@ extension GoogleDriveViewController: GoogleSignInControllerDelegate {
         guard let _ = user else { return }
         viewStore.send(.initialize)
         viewStore.send(.requestFiles)
+    }
+    
+}
+
+extension GoogleDriveViewController: DownloadBarViewDelegate {
+    
+    func didTapDownloadButton() {
+        viewStore.send(.didTapDownloadButton)
+    }
+    
+    func didTapPauseButton() {
+        viewStore.send(.didTapPauseButton)
+    }
+    
+    func didTapCancelButton() {
+        viewStore.send(.didTapCancelButton)
     }
     
 }

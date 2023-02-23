@@ -17,6 +17,9 @@ public struct GoogleDrive: ReducerProtocol {
         case receiveFiles(TaskResult<[FileModel]>)
         
         case didSelectItemAt(Int)
+        case didTapDownloadButton
+        case didTapPauseButton
+        case didTapCancelButton
     }
     
     @Dependency(\.googleDriveUseCase) var googleDriveUseCase
@@ -60,6 +63,43 @@ public struct GoogleDrive: ReducerProtocol {
                 let count = files.filter { $0.accessoryViewModel == .selected }.count
                 state.downloadBar = count == 0 ? .nothing : .selected(count)
                 
+                return .none
+                
+            case .didTapDownloadButton:
+                guard let files = state.files else { return .none }
+                
+                let selectedFileIds: [String] = files.compactMap { file in
+                    guard file.accessoryViewModel == .selected else { return nil }
+                    return file.id
+                }
+                
+                guard !selectedFileIds.isEmpty else { return .none }
+                state.downloadBar = .downloading(0, selectedFileIds.count)
+                
+                return .none
+                
+            case .didTapPauseButton:
+                guard let files = state.files else { return .none }
+                
+                let selectedFileIds: [String] = files.compactMap { file in
+                    guard file.accessoryViewModel == .selected else { return nil }
+                    return file.id
+                }
+                
+                guard !selectedFileIds.isEmpty else { return .none }
+                state.downloadBar = .paused(0, selectedFileIds.count)
+                return .none
+                
+            case .didTapCancelButton:
+                guard let files = state.files else { return .none }
+                
+                let selectedFileIds: [String] = files.compactMap { file in
+                    guard file.accessoryViewModel == .selected else { return nil }
+                    return file.id
+                }
+                
+                guard !selectedFileIds.isEmpty else { return .none }
+                state.downloadBar = .paused(0, selectedFileIds.count)
                 return .none
             }
         }
