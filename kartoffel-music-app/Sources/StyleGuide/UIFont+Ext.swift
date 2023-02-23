@@ -11,4 +11,5 @@ public struct UIFontTheme {
     public let body = UIFont.systemFont(ofSize: 12, weight: .regular)
     public let footnote1 = UIFont.systemFont(ofSize: 14, weight: .regular)
     public let caption1 = UIFont.monospacedSystemFont(ofSize: 16, weight: .bold)
+    public let caption2 = UIFont.monospacedSystemFont(ofSize: 12, weight: .semibold)
 }

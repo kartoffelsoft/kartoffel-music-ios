@@ -31,6 +31,13 @@ class DownloadBarView: UIView {
         return view
     }()
     
+    private let downloadingLabel = {
+        let label = UILabel()
+        label.font = .theme.caption2
+        label.textColor = .theme.primary
+        return label
+    }()
+    
     private let pauseButton = {
         let button = UIButton()
         button.setImage(
@@ -97,10 +104,12 @@ class DownloadBarView: UIView {
         downloadButton.translatesAutoresizingMaskIntoConstraints = false
         downloadingView.translatesAutoresizingMaskIntoConstraints = false
         downloadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        downloadingLabel.translatesAutoresizingMaskIntoConstraints = false
         pauseButton.translatesAutoresizingMaskIntoConstraints = false
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         
         downloadingView.addSubview(downloadingIndicator)
+        downloadingView.addSubview(downloadingLabel)
         downloadingView.addSubview(pauseButton)
         downloadingView.addSubview(cancelButton)
         
@@ -121,10 +130,13 @@ class DownloadBarView: UIView {
             downloadingIndicator.leadingAnchor.constraint(equalTo: downloadingView.leadingAnchor, constant: 20),
             downloadingIndicator.centerYAnchor.constraint(equalTo: downloadingView.centerYAnchor),
             
+            downloadingLabel.leadingAnchor.constraint(equalTo: downloadingIndicator.trailingAnchor, constant: 20),
+            downloadingLabel.centerYAnchor.constraint(equalTo: downloadingView.centerYAnchor),
+            
             cancelButton.trailingAnchor.constraint(equalTo: downloadingView.trailingAnchor, constant: -20),
             cancelButton.centerYAnchor.constraint(equalTo: downloadingView.centerYAnchor),
             
-            pauseButton.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor, constant: -20),
+            pauseButton.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor, constant: -28),
             pauseButton.centerYAnchor.constraint(equalTo: downloadingView.centerYAnchor),
         ])
     }
@@ -148,6 +160,7 @@ class DownloadBarView: UIView {
         case let .downloading(current, count):
             downloadButton.isHidden = true
             downloadingView.isHidden = false
+            downloadingLabel.text = "Downloading (\(current)/\(count))"
             downloadingIndicator.startAnimating()
         case let .paused(current, count):
             downloadButton.isHidden = false
