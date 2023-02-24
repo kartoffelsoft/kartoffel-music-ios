@@ -8,6 +8,15 @@ public struct GoogleDrive: ReducerProtocol {
     public struct State: Equatable {
         var files: [FileViewModel]?
         var downloadBar: DownloadBarViewModel = .nothing
+        
+        var selectedFileIds: [String] {
+            guard let files = files else { return [] }
+            return files.compactMap { file in
+                guard file.accessoryViewModel == .selected else { return nil }
+                return file.id
+            }
+        }
+        
         public init() {}
     }
     
@@ -50,6 +59,7 @@ public struct GoogleDrive: ReducerProtocol {
                 return .none
                 
             case let .didSelectItemAt(index):
+                if case .downloading = state.downloadBar { return .none }
                 switch state.files?[index].accessoryViewModel {
                 case .nothing:
                     state.files?[index].accessoryViewModel = .selected
@@ -66,40 +76,18 @@ public struct GoogleDrive: ReducerProtocol {
                 return .none
                 
             case .didTapDownloadButton:
-                guard let files = state.files else { return .none }
-                
-                let selectedFileIds: [String] = files.compactMap { file in
-                    guard file.accessoryViewModel == .selected else { return nil }
-                    return file.id
-                }
-                
-                guard !selectedFileIds.isEmpty else { return .none }
-                state.downloadBar = .downloading(0, selectedFileIds.count)
-                
+                guard !state.selectedFileIds.isEmpty else { return .none }
+                state.downloadBar = .downloading(0, state.selectedFileIds.count)
                 return .none
                 
             case .didTapPauseButton:
-                guard let files = state.files else { return .none }
-                
-                let selectedFileIds: [String] = files.compactMap { file in
-                    guard file.accessoryViewModel == .selected else { return nil }
-                    return file.id
-                }
-                
-                guard !selectedFileIds.isEmpty else { return .none }
-                state.downloadBar = .paused(0, selectedFileIds.count)
+                guard !state.selectedFileIds.isEmpty else { return .none }
+                state.downloadBar = .paused(0, state.selectedFileIds.count)
                 return .none
                 
             case .didTapCancelButton:
-                guard let files = state.files else { return .none }
-                
-                let selectedFileIds: [String] = files.compactMap { file in
-                    guard file.accessoryViewModel == .selected else { return nil }
-                    return file.id
-                }
-                
-                guard !selectedFileIds.isEmpty else { return .none }
-                state.downloadBar = .paused(0, selectedFileIds.count)
+                guard !state.selectedFileIds.isEmpty else { return .none }
+                state.downloadBar = .paused(0, state.selectedFileIds.count)
                 return .none
             }
         }

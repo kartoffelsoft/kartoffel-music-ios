@@ -26,6 +26,15 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 )
             )
             
+            let header = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(64.0)
+                ),
+                elementKind: UICollectionView.elementKindSectionHeader,
+                alignment: .top
+            )
+            
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: .init(
                     widthDimension: .fractionalWidth(1),
@@ -33,21 +42,11 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 ),
                 subitems: [ item ]
             )
-            group.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
-            
-            let header = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(52.0)
-                ),
-                elementKind: UICollectionView.elementKindSectionHeader,
-                alignment: .top
-            )
-            header.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
-            
+
             let section = NSCollectionLayoutSection(group: group)
             section.boundarySupplementaryItems = [ header ]
             section.orthogonalScrollingBehavior = .continuous
+            section.contentInsets = .init(top: 0, leading: 16, bottom: 16, trailing: 16)
             return section
 
         case .localFiles:
@@ -58,6 +57,16 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 )
             )
             
+            let header = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(64.0)
+                ),
+                elementKind: UICollectionView.elementKindSectionHeader,
+                alignment: .top
+            )
+            header.pinToVisibleBounds = true
+            
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: .init(
                     widthDimension: .fractionalWidth(1),
@@ -65,21 +74,10 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 ),
                 subitems: [ item ]
             )
-            group.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
-
-            let header = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(50.0)
-                ),
-                elementKind: UICollectionView.elementKindSectionHeader,
-                alignment: .top
-            )
-            header.contentInsets = .init(top: 8, leading: 16, bottom: 8, trailing: 16)
-            header.pinToVisibleBounds = true
             
             let section = NSCollectionLayoutSection(group: group)
             section.boundarySupplementaryItems = [ header ]
+            section.contentInsets = .init(top: 0, leading: 16, bottom: 16, trailing: 16)
             return section
 
         default:
