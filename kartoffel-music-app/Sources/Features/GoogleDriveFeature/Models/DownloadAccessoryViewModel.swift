@@ -6,6 +6,6 @@ enum DownloadAccessoryViewModel: Equatable, Hashable {
     enum SelectedState: Equatable, Hashable {
         case nothing
         case waiting
-        case downloading(Int)
+        case downloading(Double)
     }
 }

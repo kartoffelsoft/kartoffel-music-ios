@@ -20,7 +20,7 @@ public class GoogleDriveViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, FileViewModel>!
 
-    private var cancellables: [AnyCancellable] = []
+    private var cancellables: Set<AnyCancellable> = []
 
     public init(store: StoreOf<GoogleDrive>) {
         self.store = store
@@ -35,10 +35,10 @@ public class GoogleDriveViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupBindings()
         setupNavigationBar()
         setupCollectionView()
         setupDatasource()
+        setupBindings()
         setupConstraints()
         
         collectionView.delegate = self
@@ -53,10 +53,9 @@ public class GoogleDriveViewController: UIViewController {
     
     private func setupBindings() {
         self.viewStore.publisher.files.sink { [weak self] files in
-            guard let files = files else { return }
             var snapshot = NSDiffableDataSourceSnapshot<Section, FileViewModel>()
             snapshot.appendSections(Section.allCases)
-            snapshot.appendItems(files)
+            snapshot.appendItems(files.elements)
             self?.dataSource.apply(snapshot, animatingDifferences: false)
         }
         .store(in: &self.cancellables)

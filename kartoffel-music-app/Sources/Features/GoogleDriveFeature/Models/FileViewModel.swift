@@ -1,4 +1,4 @@
-struct FileViewModel: Equatable, Hashable {
+struct FileViewModel: Equatable, Hashable, Identifiable {
     
     let id: String
     let name: String

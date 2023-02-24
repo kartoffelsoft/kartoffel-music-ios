@@ -44,8 +44,6 @@ extension GoogleDriveUseCase: DependencyKey {
                         let result: Data? = try await withCheckedThrowingContinuation { continuation in
                             fetcher.beginFetch(completionHandler: { data, error in
                                 if error == nil {
-                                    print("finished downloading Data...")
-                                    print(data as Any)
                                     continuation.resume(returning: data)
                                 } else {
                                     print("Error: \(String(describing: error?.localizedDescription))")
