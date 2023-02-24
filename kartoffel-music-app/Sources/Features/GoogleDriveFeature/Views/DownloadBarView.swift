@@ -133,11 +133,13 @@ class DownloadBarView: UIView {
             downloadingLabel.leadingAnchor.constraint(equalTo: downloadingIndicator.trailingAnchor, constant: 20),
             downloadingLabel.centerYAnchor.constraint(equalTo: downloadingView.centerYAnchor),
             
-            cancelButton.trailingAnchor.constraint(equalTo: downloadingView.trailingAnchor, constant: -20),
-            cancelButton.centerYAnchor.constraint(equalTo: downloadingView.centerYAnchor),
+            cancelButton.trailingAnchor.constraint(equalTo: downloadingView.trailingAnchor),
+            cancelButton.widthAnchor.constraint(equalToConstant: 44),
+            cancelButton.heightAnchor.constraint(equalTo: downloadingView.heightAnchor),
             
-            pauseButton.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor, constant: -28),
-            pauseButton.centerYAnchor.constraint(equalTo: downloadingView.centerYAnchor),
+            pauseButton.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor),
+            pauseButton.widthAnchor.constraint(equalToConstant: 44),
+            pauseButton.heightAnchor.constraint(equalTo: downloadingView.heightAnchor),
         ])
     }
     

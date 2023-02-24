@@ -22,8 +22,10 @@ public struct GoogleDrive: ReducerProtocol {
     
     public enum Action: Equatable {
         case initialize
-        case requestFiles
-        case receiveFiles(TaskResult<[FileModel]>)
+        case requestFileList
+        case receiveFileList(TaskResult<[FileModel]>)
+        case requestFileDownload(String)
+        case receiveFileDownload(TaskResult<GoogleDriveUseCase.DownloadEvent>)
         
         case didSelectItemAt(Int)
         case didTapDownloadButton
@@ -42,20 +44,37 @@ public struct GoogleDrive: ReducerProtocol {
                 googleDriveUseCase.setAuthorizer()
                 return .none
 
-            case .requestFiles:
+            case .requestFileList:
                 return .task {
-                    await .receiveFiles(TaskResult {
-                        try await googleDriveUseCase.retrieveFiles()
+                    await .receiveFileList(TaskResult {
+                        try await googleDriveUseCase.retrieveFileList()
                     })
                 }
-                
-            case let .receiveFiles(.success(files)):
+            case let .receiveFileList(.success(files)):
                 state.files = files.map({
                     FileViewModel(id: $0.id, name: $0.name)
                 })
                 return .none
+            case let .receiveFileList(.failure(error)):
+                return .none
                 
-            case let .receiveFiles(.failure(error)):
+            case let .requestFileDownload(id):
+                return .run { send in
+                    for try await event in self.googleDriveUseCase.downloadFile(id) {
+                        await send(.receiveFileDownload(.success(event)), animation: .default)
+                    }
+                } catch: { error, send in
+                    await send(.receiveFileDownload(.failure(error)), animation: .default)
+                }
+                .cancellable(id: id)
+                
+            case let .receiveFileDownload(.success(.updateProgress(progress))):
+                print("# updateProgress: ", progress)
+                return .none
+            case let .receiveFileDownload(.success(.response(data))):
+                print("# response: ")
+                return .none
+            case let .receiveFileDownload(.failure(error)):
                 return .none
                 
             case let .didSelectItemAt(index):
@@ -78,7 +97,9 @@ public struct GoogleDrive: ReducerProtocol {
             case .didTapDownloadButton:
                 guard !state.selectedFileIds.isEmpty else { return .none }
                 state.downloadBar = .downloading(0, state.selectedFileIds.count)
-                return .none
+                return .run { [id = state.selectedFileIds.first] send in
+                    await send(.requestFileDownload(id!))
+                }
                 
             case .didTapPauseButton:
                 guard !state.selectedFileIds.isEmpty else { return .none }

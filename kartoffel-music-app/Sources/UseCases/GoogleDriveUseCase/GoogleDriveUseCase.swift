@@ -1,17 +1,26 @@
 import CommonModels
 import ComposableArchitecture
+import Foundation
 
 public class GoogleDriveUseCase {
     
     public var setAuthorizer: () -> Void
-    public var retrieveFiles: () async throws -> [FileModel]
+    public var retrieveFileList: () async throws -> [FileModel]
+    public var downloadFile: @Sendable (_ id: String) -> AsyncThrowingStream<DownloadEvent, Error>
+
+    public enum DownloadEvent: Equatable {
+      case response(Data)
+      case updateProgress(Double)
+    }
     
     init(
         setAuthorizer: @escaping () -> Void,
-        retrieveFiles: @escaping () async throws -> [FileModel]
+        retrieveFileList: @escaping () async throws -> [FileModel],
+        downloadFile: @escaping @Sendable (_ id: String) -> AsyncThrowingStream<DownloadEvent, Error>
     ) {
         self.setAuthorizer = setAuthorizer
-        self.retrieveFiles = retrieveFiles
+        self.retrieveFileList = retrieveFileList
+        self.downloadFile = downloadFile
     }
     
 }

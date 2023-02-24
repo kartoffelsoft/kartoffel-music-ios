@@ -9,7 +9,7 @@ extension GoogleDriveUseCase: DependencyKey {
         setAuthorizer: {
             service.authorizer = GIDSignIn.sharedInstance.currentUser?.fetcherAuthorizer
         },
-        retrieveFiles: {
+        retrieveFileList: {
             let query = GTLRDriveQuery_FilesList.query()
             query.pageSize = 10
             query.q = "mimeType = 'audio/mpeg'"
@@ -25,6 +25,70 @@ extension GoogleDriveUseCase: DependencyKey {
             return result.compactMap { file in
                 return FileModel(from: file)
             }
+        },
+        downloadFile: { id in
+            .init { continuation in
+                Task {
+                    do {
+                        let url = "https://www.googleapis.com/drive/v3/files/\(id)?alt=media"
+                        let fetcher = service.fetcherService.fetcher(withURLString: url)
+                        
+                        fetcher.receivedProgressBlock = { _, totalBytesReceived in
+                            if let fileSize = fetcher.response?.expectedContentLength {
+                                let progress: Double = Double(totalBytesReceived) / Double(fileSize)
+                                print(progress)
+                                continuation.yield(.updateProgress(progress))
+                            }
+                        }
+                        
+                        let result: Data? = try await withCheckedThrowingContinuation { continuation in
+                            fetcher.beginFetch(completionHandler: { data, error in
+                                if error == nil {
+                                    print("finished downloading Data...")
+                                    print(data as Any)
+                                    continuation.resume(returning: data)
+                                } else {
+                                    print("Error: \(String(describing: error?.localizedDescription))")
+                                }
+                            })
+                        }
+
+                        guard let result = result else { return continuation.finish() }
+                        continuation.yield(.response(result))
+                        continuation.finish()
+                    } catch {
+                        continuation.finish(throwing: error)
+                    }
+                }
+            }
+//            let url = "https://www.googleapis.com/drive/v3/files/\(id)?alt=media"
+//            let fetcher = service.fetcherService.fetcher(withURLString: url)
+//
+//
+//            fetcher.beginFetch(completionHandler: { fileData, error in
+//
+//                if error == nil {
+//
+//                    print("finished downloading Data...")
+//                    print(fileData as Any)
+//
+//
+//                } else {
+//
+//                    print("Error: \(String(describing: error?.localizedDescription))")
+//                }
+//            })
+//
+//            fetcher.receivedProgressBlock = { _, totalBytesReceived in
+//
+//                if let fileSize = fetcher.response?.expectedContentLength {
+//
+//                    let progress: Double = Double(totalBytesReceived) / Double(fileSize)
+//                    print(progress)
+//                }
+//            }
+//            print("Downloading: ", id)
+//            return true
         }
     )
     

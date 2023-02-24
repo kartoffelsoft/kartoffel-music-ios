@@ -161,7 +161,7 @@ extension GoogleDriveViewController: GoogleSignInControllerDelegate {
     func didCompleteSignIn(user: GIDGoogleUser?) {
         guard let _ = user else { return }
         viewStore.send(.initialize)
-        viewStore.send(.requestFiles)
+        viewStore.send(.requestFileList)
     }
     
 }

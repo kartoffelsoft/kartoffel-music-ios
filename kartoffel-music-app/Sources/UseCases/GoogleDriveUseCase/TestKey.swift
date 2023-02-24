@@ -14,7 +14,8 @@ extension GoogleDriveUseCase: TestDependencyKey {
     
     static public var testValue = GoogleDriveUseCase(
         setAuthorizer: XCTUnimplemented("\(GoogleDriveUseCase.self).setAuthorizer"),
-        retrieveFiles: XCTUnimplemented("\(GoogleDriveUseCase.self).retrieveFiles")
+        retrieveFileList: XCTUnimplemented("\(GoogleDriveUseCase.self).retrieveFileList"),
+        downloadFile: XCTUnimplemented("\(GoogleDriveUseCase.self).downloadFile")
     )
     
 }
