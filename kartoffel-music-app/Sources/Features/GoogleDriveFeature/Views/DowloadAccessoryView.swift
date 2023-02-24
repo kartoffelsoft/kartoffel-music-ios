@@ -31,7 +31,9 @@ class DownloadAccessoryView: UIView {
             backgroundLayer.strokeColor = UIColor.theme.primary.cgColor
             layer.addSublayer(backgroundLayer)
             break
-        case .selected:
+            
+        case .selected://(state):
+
             let circularPath = UIBezierPath(arcCenter: CGPoint(x: frame.size.width / 2, y: frame.size.height / 2), radius: 10, startAngle: 0, endAngle: 2 * .pi, clockwise: true)
             
             backgroundLayer.path = circularPath.cgPath
@@ -57,8 +59,7 @@ class DownloadAccessoryView: UIView {
                 imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             ])
             break
-        case let .downloading(progress):
-            break
+
         case .completed:
             break
         }

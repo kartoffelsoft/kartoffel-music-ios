@@ -5,14 +5,18 @@ import GoogleDriveUseCase
 import UIKit
 
 public struct GoogleDrive: ReducerProtocol {
+    
     public struct State: Equatable {
+        
         var files: [FileViewModel]?
         var downloadBar: DownloadBarViewModel = .nothing
+        
+        var downloadQueue: DownloadQueue?
         
         var selectedFileIds: [String] {
             guard let files = files else { return [] }
             return files.compactMap { file in
-                guard file.accessoryViewModel == .selected else { return nil }
+                guard case .selected = file.accessoryViewModel else { return nil }
                 return file.id
             }
         }
@@ -72,8 +76,18 @@ public struct GoogleDrive: ReducerProtocol {
                 print("# updateProgress: ", progress)
                 return .none
             case let .receiveFileDownload(.success(.response(data))):
-                print("# response: ")
-                return .none
+                print("# response:")
+                state.downloadQueue?.removeFirst()
+                guard let queue = state.downloadQueue,
+                      let id = queue.first else {
+                    state.downloadBar = .nothing
+                    state.downloadQueue = nil
+                    return .none
+                }
+                state.downloadBar = .downloading(queue.done, queue.total)
+                return .run { send in
+                    await send(.requestFileDownload(id))
+                }
             case let .receiveFileDownload(.failure(error)):
                 return .none
                 
@@ -81,24 +95,25 @@ public struct GoogleDrive: ReducerProtocol {
                 if case .downloading = state.downloadBar { return .none }
                 switch state.files?[index].accessoryViewModel {
                 case .nothing:
-                    state.files?[index].accessoryViewModel = .selected
+                    state.files?[index].accessoryViewModel = .selected(.nothing)
                 case .selected:
                     state.files?[index].accessoryViewModel = .nothing
                 default:
                     ()
                 }
                 
-                guard let files = state.files else { return .none }
-                let count = files.filter { $0.accessoryViewModel == .selected }.count
-                state.downloadBar = count == 0 ? .nothing : .selected(count)
-                
+                let ids = state.selectedFileIds
+                state.downloadBar = ids.isEmpty ? .nothing : .selected(ids.count)
                 return .none
                 
             case .didTapDownloadButton:
-                guard !state.selectedFileIds.isEmpty else { return .none }
-                state.downloadBar = .downloading(0, state.selectedFileIds.count)
-                return .run { [id = state.selectedFileIds.first] send in
-                    await send(.requestFileDownload(id!))
+                let ids = state.selectedFileIds
+                guard !ids.isEmpty else { return .none }
+                state.downloadBar = .downloading(0, ids.count)
+                state.downloadQueue = DownloadQueue(ids)
+                guard let id = state.downloadQueue?.first else { return .none }
+                return .run { send in
+                    await send(.requestFileDownload(id))
                 }
                 
             case .didTapPauseButton:
