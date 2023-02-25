@@ -42,8 +42,12 @@ let package = Package(
             targets: ["CommonModels"]
         ),
         .library(
-            name: "FileManagerCreateUseCase",
-            targets: ["FileManagerCreateUseCase"]
+            name: "FileCreateUseCase",
+            targets: ["FileCreateUseCase"]
+        ),
+        .library(
+            name: "FileListReadUseCase",
+            targets: ["FileListReadUseCase"]
         ),
         .library(
             name: "GoogleDriveUseCase",
@@ -70,7 +74,7 @@ let package = Package(
             name: "GoogleDriveFeature",
             dependencies: [
                 "CommonModels",
-                "FileManagerCreateUseCase",
+                "FileCreateUseCase",
                 "GoogleDriveUseCase",
                 "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -82,6 +86,7 @@ let package = Package(
         .target(
             name: "LibraryFeature",
             dependencies: [
+                "FileListReadUseCase",
                 "GoogleDriveFeature",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
@@ -119,11 +124,18 @@ let package = Package(
             name: "CommonModels"
         ),
         .target(
-            name: "FileManagerCreateUseCase",
+            name: "FileCreateUseCase",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
-            path: "./Sources/UseCases/FileManagerCreateUseCase"
+            path: "./Sources/UseCases/FileCreateUseCase"
+        ),
+        .target(
+            name: "FileListReadUseCase",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "./Sources/UseCases/FileListReadUseCase"
         ),
         .target(
             name: "GoogleDriveUseCase",

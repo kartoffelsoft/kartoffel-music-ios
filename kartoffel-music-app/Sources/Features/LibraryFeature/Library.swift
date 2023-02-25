@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import FileListReadUseCase
 import GoogleDriveFeature
 
 public struct Library: ReducerProtocol {
@@ -16,6 +17,8 @@ public struct Library: ReducerProtocol {
         case navigateToStorageProvider(selection: Int?)
         case googleDrive(GoogleDrive.Action)
     }
+    
+    @Dependency(\.fileListReadUseCase) var fileListReadUseCase
     
     public init() {}
     

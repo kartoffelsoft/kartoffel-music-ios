@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import Foundation
 
-public class FileManagerCreateUseCase {
+public class FileCreateUseCase {
     
     public var start: (String, Data) async throws -> Void
     
