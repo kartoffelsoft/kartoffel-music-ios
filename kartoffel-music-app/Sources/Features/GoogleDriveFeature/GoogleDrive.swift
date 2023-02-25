@@ -10,7 +10,6 @@ public struct GoogleDrive: ReducerProtocol {
     public struct State: Equatable {
         var files: IdentifiedArrayOf<FileViewModel> = []
         var downloadBar: DownloadBarViewModel = .nothing
-        
         var downloadQueue: DownloadQueue = .init([])
         
         var selectedFileIds: [String] {
@@ -118,7 +117,7 @@ public struct GoogleDrive: ReducerProtocol {
             case .didTapDownloadButton:
                 let ids = state.selectedFileIds
                 guard !ids.isEmpty else { return .none }
-                state.downloadQueue = DownloadQueue(ids)
+                state.downloadQueue.reload(ids)
                 state.downloadBar = .downloading(0, ids.count)
                 ids.forEach { id in
                     state.files[id: id]?.accessoryViewModel = .selected(.waiting)
