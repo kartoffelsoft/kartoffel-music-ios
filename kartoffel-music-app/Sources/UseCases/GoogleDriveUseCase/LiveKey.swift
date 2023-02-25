@@ -36,7 +36,6 @@ extension GoogleDriveUseCase: DependencyKey {
                         fetcher.receivedProgressBlock = { _, totalBytesReceived in
                             if let fileSize = fetcher.response?.expectedContentLength {
                                 let progress: Double = Double(totalBytesReceived) / Double(fileSize)
-                                print(progress)
                                 continuation.yield(.updateProgress(progress))
                             }
                         }
@@ -59,34 +58,6 @@ extension GoogleDriveUseCase: DependencyKey {
                     }
                 }
             }
-//            let url = "https://www.googleapis.com/drive/v3/files/\(id)?alt=media"
-//            let fetcher = service.fetcherService.fetcher(withURLString: url)
-//
-//
-//            fetcher.beginFetch(completionHandler: { fileData, error in
-//
-//                if error == nil {
-//
-//                    print("finished downloading Data...")
-//                    print(fileData as Any)
-//
-//
-//                } else {
-//
-//                    print("Error: \(String(describing: error?.localizedDescription))")
-//                }
-//            })
-//
-//            fetcher.receivedProgressBlock = { _, totalBytesReceived in
-//
-//                if let fileSize = fetcher.response?.expectedContentLength {
-//
-//                    let progress: Double = Double(totalBytesReceived) / Double(fileSize)
-//                    print(progress)
-//                }
-//            }
-//            print("Downloading: ", id)
-//            return true
         }
     )
     

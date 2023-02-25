@@ -42,9 +42,13 @@ let package = Package(
             targets: ["CommonModels"]
         ),
         .library(
+            name: "FileManagerCreateUseCase",
+            targets: ["FileManagerCreateUseCase"]
+        ),
+        .library(
             name: "GoogleDriveUseCase",
             targets: ["GoogleDriveUseCase"]
-        )
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/google/google-api-objectivec-client-for-rest", exact: "3.0.0"),
@@ -66,6 +70,7 @@ let package = Package(
             name: "GoogleDriveFeature",
             dependencies: [
                 "CommonModels",
+                "FileManagerCreateUseCase",
                 "GoogleDriveUseCase",
                 "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -112,6 +117,13 @@ let package = Package(
         ),
         .target(
             name: "CommonModels"
+        ),
+        .target(
+            name: "FileManagerCreateUseCase",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "./Sources/UseCases/FileManagerCreateUseCase"
         ),
         .target(
             name: "GoogleDriveUseCase",

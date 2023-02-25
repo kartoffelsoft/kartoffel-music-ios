@@ -1,5 +1,6 @@
 import CommonModels
 import ComposableArchitecture
+import FileManagerCreateUseCase
 import GoogleSignIn
 import GoogleDriveUseCase
 import UIKit
@@ -10,7 +11,7 @@ public struct GoogleDrive: ReducerProtocol {
         var files: IdentifiedArrayOf<FileViewModel> = []
         var downloadBar: DownloadBarViewModel = .nothing
         
-        var downloadQueue: DownloadQueue?
+        var downloadQueue: DownloadQueue = .init([])
         
         var selectedFileIds: [String] {
             return files.compactMap { file in
@@ -26,7 +27,7 @@ public struct GoogleDrive: ReducerProtocol {
         case initialize
         case requestFileList
         case receiveFileList(TaskResult<[FileModel]>)
-        case requestFileDownload(String)
+        case requestFileDownload
         case receiveFileDownload(TaskResult<GoogleDriveUseCase.DownloadEvent>)
         
         case didSelectItemAt(Int)
@@ -35,6 +36,7 @@ public struct GoogleDrive: ReducerProtocol {
         case didTapCancelButton
     }
     
+    @Dependency(\.fileManagerCreateUseCase) var fileManagerCreateUseCase
     @Dependency(\.googleDriveUseCase) var googleDriveUseCase
     
     public init() {}
@@ -52,15 +54,21 @@ public struct GoogleDrive: ReducerProtocol {
                         try await googleDriveUseCase.retrieveFileList()
                     })
                 }
+                
             case let .receiveFileList(.success(files)):
                 state.files.append(contentsOf: files.map({
                     FileViewModel(id: $0.id, name: $0.name)
                 }))
                 return .none
+                
             case let .receiveFileList(.failure(error)):
                 return .none
                 
-            case let .requestFileDownload(id):
+            case .requestFileDownload:
+                guard let id = state.downloadQueue.first else {
+                    state.downloadBar = .nothing
+                    return .none
+                }
                 return .run { send in
                     for try await event in self.googleDriveUseCase.downloadFile(id) {
                         await send(.receiveFileDownload(.success(event)), animation: .default)
@@ -71,23 +79,24 @@ public struct GoogleDrive: ReducerProtocol {
                 .cancellable(id: id)
                 
             case let .receiveFileDownload(.success(.updateProgress(progress))):
-                guard let id = state.downloadQueue?.first else { return .none }
+                guard let id = state.downloadQueue.first else { return .none }
                 state.files[id: id]?.accessoryViewModel = .selected(.downloading(progress))
                 return .none
+                
             case let .receiveFileDownload(.success(.response(data))):
-                guard let id = state.downloadQueue?.first else { return .none }
+                guard let id = state.downloadQueue.first,
+                      let name = state.files[id: id]?.name
+                else { return .none }
+                
                 state.files[id: id]?.accessoryViewModel = .completed
-                state.downloadQueue?.removeFirst()
-                guard let queue = state.downloadQueue,
-                      let id = queue.first else {
-                    state.downloadBar = .nothing
-                    state.downloadQueue = nil
-                    return .none
-                }
-                state.downloadBar = .downloading(queue.done, queue.total)
+                state.downloadQueue.removeFirst()
+                state.downloadBar = .downloading(state.downloadQueue.done, state.downloadQueue.total)
+                
                 return .run { send in
-                    await send(.requestFileDownload(id))
+                    try await fileManagerCreateUseCase.start(name, data)
+                    await send(.requestFileDownload)
                 }
+                
             case let .receiveFileDownload(.failure(error)):
                 return .none
                 
@@ -114,10 +123,7 @@ public struct GoogleDrive: ReducerProtocol {
                 ids.forEach { id in
                     state.files[id: id]?.accessoryViewModel = .selected(.waiting)
                 }
-                guard let id = state.downloadQueue?.first else { return .none }
-                return .run { send in
-                    await send(.requestFileDownload(id))
-                }
+                return .run { send in await send(.requestFileDownload) }
                 
             case .didTapPauseButton:
                 guard !state.selectedFileIds.isEmpty else { return .none }
