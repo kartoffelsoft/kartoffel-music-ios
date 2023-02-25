@@ -10,7 +10,14 @@ extension FileListReadUseCase: DependencyKey {
                 in: .userDomainMask
             )[0]
             
-            return []
+            let contents = try FileManager.default.contentsOfDirectory(
+                at: url,
+                includingPropertiesForKeys: nil
+            )
+            
+            return contents.compactMap {
+                try? $0.resourceValues(forKeys: [.localizedNameKey]).localizedName
+            }
         }
     )
     
