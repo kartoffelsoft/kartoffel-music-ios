@@ -1,8 +1,7 @@
+import AVFoundation
 import CommonModels
 import ComposableArchitecture
 import Foundation
-
-import MediaPlayer
 
 extension FileListReadUseCase: DependencyKey {
     
@@ -21,9 +20,9 @@ extension FileListReadUseCase: DependencyKey {
             return try contents.compactMap {
                 guard let id = try $0.resourceValues(forKeys: [.localizedNameKey]).localizedName
                 else { return nil }
+            
+                let metadata = AVAsset(url: $0).commonMetadata
 
-                let metadata = AVPlayerItem(url: $0).asset.commonMetadata
-                
                 let title = AVMetadataItem.metadataItems(
                     from: metadata,
                     filteredByIdentifier: .commonIdentifierTitle
