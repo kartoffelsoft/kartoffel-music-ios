@@ -98,15 +98,32 @@ public class LibraryViewController: UIViewController {
     }
     
     private func setupDatasource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, LibraryFileViewModel> { cell, _, file in
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, LibraryFileViewModel> { [unowned self] cell, indexPath, file in
             var content = cell.defaultContentConfiguration()
             content.text = file.title ?? "Unknown"
             content.textProperties.color = .theme.primary
+            content.secondaryText = file.artist ?? "Unknown artist"
+            content.secondaryTextProperties.color = .theme.primary
+            content.directionalLayoutMargins = .init(top: 4, leading: 0, bottom: 4, trailing: 0)
             if let artwork = file.artwork {
                 content.image = UIImage(data: artwork)
             }
             cell.contentConfiguration = content
             cell.backgroundConfiguration?.backgroundColor = .theme.background
+            
+            let button = UIButton()
+            button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+            button.tag = indexPath.row
+            button.addTarget(self, action: #selector(self.handleMoreButtonTap), for: .touchUpInside)
+            cell.accessories = [
+                .customView(
+                    configuration: UICellAccessory.CustomViewConfiguration(
+                        customView: button,
+                        placement: .trailing(displayed: .always),
+                        tintColor: .theme.primary
+                    )
+                )
+            ]
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>(
@@ -176,6 +193,10 @@ public class LibraryViewController: UIViewController {
             self?.dataSource.apply(snapshot)
         }
         .store(in: &self.cancellables)
+    }
+    
+    @objc private func handleMoreButtonTap(_ sender: UIButton) {
+        print("#: ", sender.tag)
     }
     
 }

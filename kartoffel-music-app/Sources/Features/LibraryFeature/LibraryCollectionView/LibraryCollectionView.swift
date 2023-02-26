@@ -21,7 +21,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
         case .storageProviders:
             let item = NSCollectionLayoutItem(
                 layoutSize: .init(
-                    widthDimension: .fractionalWidth(0.33),
+                    widthDimension: .fractionalWidth(0.25),
                     heightDimension: .fractionalHeight(1)
                 )
             )
@@ -38,7 +38,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: .init(
                     widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(120)
+                    heightDimension: .absolute(92)
                 ),
                 subitems: [ item ]
             )
@@ -53,7 +53,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
             let item = NSCollectionLayoutItem(
                 layoutSize: .init(
                     widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(48)
+                    heightDimension: .absolute(80)
                 )
             )
             

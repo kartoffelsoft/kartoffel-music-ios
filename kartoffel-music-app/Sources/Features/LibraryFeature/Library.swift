@@ -42,6 +42,7 @@ public struct Library: ReducerProtocol {
                     LibraryFileViewModel(
                         id: $0.id,
                         title: $0.title,
+                        artist: $0.artist,
                         artwork: $0.artwork)
                 }))
                 return .none
