@@ -10,7 +10,6 @@ extension FileCreateUseCase: DependencyKey {
                 in: .userDomainMask
             )[0].appendingPathComponent(name)
             
-            print("# path: ", url)
             try data.write(to: url)
         }
     )

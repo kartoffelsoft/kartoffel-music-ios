@@ -38,8 +38,8 @@ public class GoogleDriveViewController: UIViewController {
         setupNavigationBar()
         setupCollectionView()
         setupDatasource()
-        setupBindings()
         setupConstraints()
+        setupBindings()
         
         collectionView.delegate = self
         googleSignInController.delegate = self

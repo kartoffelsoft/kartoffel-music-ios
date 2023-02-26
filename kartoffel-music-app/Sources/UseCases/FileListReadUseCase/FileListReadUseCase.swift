@@ -1,11 +1,12 @@
+import CommonModels
 import ComposableArchitecture
 import Foundation
 
 public class FileListReadUseCase {
     
-    public var start: () async throws -> [String]
+    public var start: @Sendable () async throws -> [MusicMetaModel]
     
-    init(start: @escaping () async throws -> [String]) {
+    init(start: @escaping @Sendable () async throws -> [MusicMetaModel]) {
         self.start = start
     }
     

@@ -8,9 +8,10 @@ import UIKitUtils
 public class LibraryViewController: UIViewController {
     private let store: StoreOf<Library>
     private let viewStore: ViewStoreOf<Library>
-    private var cancellables: [AnyCancellable] = []
+    private var cancellables: Set<AnyCancellable> = []
     
     private let collectionView = LibraryCollectionView()
+    private var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>!
     
     public init(store: StoreOf<Library>) {
         self.store = store
@@ -28,12 +29,15 @@ public class LibraryViewController: UIViewController {
         setupNavigation()
         setupNavigationBar()
         setupCollectionView()
+        setupDatasource()
         setupConstraints()
+        setupBindings()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
+        viewStore.send(.initialize)
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -78,7 +82,6 @@ public class LibraryViewController: UIViewController {
     private func setupCollectionView() {
         collectionView.backgroundColor = .theme.background
         collectionView.delegate = self
-        collectionView.dataSource = self
         collectionView.register(
             HeaderReusableView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -94,6 +97,60 @@ public class LibraryViewController: UIViewController {
         )
     }
     
+    private func setupDatasource() {
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, LibraryFileViewModel> { cell, _, file in
+            var content = cell.defaultContentConfiguration()
+            content.text = file.title ?? "Unknown"
+            content.textProperties.color = .theme.primary
+            cell.contentConfiguration = content
+            cell.backgroundConfiguration?.backgroundColor = .theme.background
+        }
+        
+        dataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>(
+            collectionView: collectionView,
+            cellProvider: { collectionView, indexPath, file in
+                switch(Section(rawValue: indexPath.section)) {
+                case .storageProviders:
+                    return collectionView.dequeueReusableCell(
+                        withReuseIdentifier: StorageProviderCell.reuseIdentifier,
+                        for: indexPath
+                    )
+                case .localFiles:
+                    return collectionView.dequeueConfiguredReusableCell(
+                        using: cellRegistration,
+                        for: indexPath,
+                        item: file as? LibraryFileViewModel
+                    )
+                case .none:
+                    break
+                }
+                return nil
+            }
+        )
+        
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            guard kind == UICollectionView.elementKindSectionHeader else {
+                return nil
+            }
+            
+            let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: HeaderReusableView.reuseIdentifier,
+                for: indexPath
+            ) as! HeaderReusableView
+            
+            switch(Section(rawValue: indexPath.section)) {
+            case .storageProviders:
+                header.title.text = "Download"
+            case .localFiles:
+                header.title.text = "Local Storage"
+            case .none:
+                break
+            }
+            return header
+        }
+    }
+    
     private func setupConstraints() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -107,49 +164,20 @@ public class LibraryViewController: UIViewController {
         ])
     }
     
+    private func setupBindings() {
+        self.viewStore.publisher.files.sink { [weak self] files in
+            var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
+            snapshot.appendSections(Section.allCases)
+            snapshot.appendItems(StorageProvider.allCases, toSection: .storageProviders)
+            snapshot.appendItems((files.elements), toSection: .localFiles)
+            self?.dataSource.apply(snapshot)
+        }
+        .store(in: &self.cancellables)
+    }
+    
 }
 
 extension LibraryViewController: UICollectionViewDelegate {
-    
-    public func numberOfSections(
-        in collectionView: UICollectionView
-    ) -> Int {
-        return Section.allCases.count
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
-        let header = collectionView.dequeueReusableSupplementaryView(
-            ofKind: kind,
-            withReuseIdentifier: HeaderReusableView.reuseIdentifier,
-            for: indexPath
-        ) as! HeaderReusableView
-        
-        switch(Section(rawValue: indexPath.section)) {
-        case .storageProviders:
-            header.title.text = "Download"
-        case .localFiles:
-            header.title.text = "Local Storage"
-        case .none:
-            break
-        }
-        
-        return header
-    }
-    
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        numberOfItemsInSection section: Int
-    ) -> Int {
-        switch(Section(rawValue: section)) {
-        case .storageProviders:
-            return 1
-        case .localFiles:
-            return 20
-        case .none:
-            return 0
-        }
-    }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch(Section(rawValue: indexPath.section)) {
@@ -166,30 +194,3 @@ extension LibraryViewController: UICollectionViewDelegate {
     }
 
 }
-
-extension LibraryViewController: UICollectionViewDataSource {
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        switch(Section(rawValue: indexPath.section)) {
-        case .storageProviders:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: StorageProviderCell.reuseIdentifier,
-                for: indexPath
-            ) as! StorageProviderCell
-            return cell
-
-        case .localFiles:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: FileCell.reuseIdentifier,
-                for: indexPath
-            ) as! FileCell
-            return cell
-            
-        case .none:
-            return UICollectionViewCell()
-        }
-    }
-
-}
-
