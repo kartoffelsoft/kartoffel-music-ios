@@ -39,7 +39,10 @@ public struct Library: ReducerProtocol {
                 
             case let .receiveFileList(.success(files)):
                 state.files.append(contentsOf: files.map({
-                    LibraryFileViewModel(id: $0.id, title: $0.title)
+                    LibraryFileViewModel(
+                        id: $0.id,
+                        title: $0.title,
+                        artwork: $0.artwork)
                 }))
                 return .none
                 

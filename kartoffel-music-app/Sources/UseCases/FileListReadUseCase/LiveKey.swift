@@ -38,7 +38,18 @@ extension FileListReadUseCase: DependencyKey {
                     filteredByIdentifier: .commonIdentifierAlbumName
                 ).first?.value as? String
                 
-                return MusicMetaModel(id: id, title: title)
+                let artwork = AVMetadataItem.metadataItems(
+                    from: metadata,
+                    filteredByIdentifier: .commonIdentifierArtwork
+                ).first?.value as? Data
+
+                return MusicMetaModel(
+                    id: id,
+                    title: title,
+                    artist: artist,
+                    albumName: albumName,
+                    artwork: artwork
+                )
             }
         }
     )

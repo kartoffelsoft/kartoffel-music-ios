@@ -102,6 +102,9 @@ public class LibraryViewController: UIViewController {
             var content = cell.defaultContentConfiguration()
             content.text = file.title ?? "Unknown"
             content.textProperties.color = .theme.primary
+            if let artwork = file.artwork {
+                content.image = UIImage(data: artwork)
+            }
             cell.contentConfiguration = content
             cell.backgroundConfiguration?.backgroundColor = .theme.background
         }
