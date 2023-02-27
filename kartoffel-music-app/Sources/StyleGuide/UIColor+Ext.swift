@@ -21,5 +21,8 @@ public struct UIColorTheme {
     public let secondary = UIColor(
         named: "secondary-500", in: Bundle.module, compatibleWith: nil
     )!
+    public let tertiary = UIColor(
+        named: "tertiary-500", in: Bundle.module, compatibleWith: nil
+    )!
     
 }

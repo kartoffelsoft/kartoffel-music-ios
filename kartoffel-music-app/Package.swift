@@ -120,9 +120,7 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
         ),
-        .target(
-            name: "CommonModels"
-        ),
+
         .target(
             name: "FileCreateUseCase",
             dependencies: [
@@ -150,10 +148,14 @@ let package = Package(
             ],
             path: "./Sources/UseCases/GoogleDriveUseCase"
         ),
+        .target(
+            name: "CommonModels"
+        ),
         .testTarget(
             name: "LibraryFeatureTests",
             dependencies: ["LibraryFeature"],
             path: "./Tests/Features/LibraryFeatureTests"
         ),
+        
     ]
 )
