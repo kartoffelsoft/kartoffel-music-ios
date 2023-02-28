@@ -1,13 +1,15 @@
+import Combine
 import ComposableArchitecture
 import StyleGuide
 import UIKit
 
-public class PlayListCreateViewController: UIViewController {
+public class AudioFileOptionsViewController: UIViewController {
     
-    private let store: StoreOf<PlayListCreate>
-    private let viewStore: ViewStoreOf<PlayListCreate>
+    private let store: StoreOf<AudioFileOptions>
+    private let viewStore: ViewStoreOf<AudioFileOptions>
+    private var cancellables: Set<AnyCancellable> = []
     
-    public init(store: StoreOf<PlayListCreate>) {
+    public init(store: StoreOf<AudioFileOptions>) {
         self.store = store
         self.viewStore = ViewStore(store)
         super.init(nibName: nil, bundle: nil)
@@ -29,10 +31,10 @@ public class PlayListCreateViewController: UIViewController {
         
         parent?.presentationController?.delegate = self
     }
-
+    
 }
 
-extension PlayListCreateViewController: UIAdaptivePresentationControllerDelegate {
+extension AudioFileOptionsViewController: UIAdaptivePresentationControllerDelegate {
     
     public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         viewStore.send(.dismiss)

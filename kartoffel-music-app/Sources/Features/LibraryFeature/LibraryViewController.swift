@@ -1,3 +1,4 @@
+import AudioFileOptionsFeature
 import Combine
 import ComposableArchitecture
 import GoogleDriveFeature
@@ -47,24 +48,49 @@ public class LibraryViewController: UIViewController {
     }
     
     private func setupNavigation() {
-        self.viewStore.publisher.activeStorageProviderId.sink { [weak self] activeStorageProviderId in
-            guard let self = self else { return }
-            guard let activeStorageProviderId = activeStorageProviderId else {
+        self.viewStore.publisher.pushNavigation.sink { [unowned self] pushNavigation in
+            guard let pushNavigation = pushNavigation else {
                 _ = self.navigationController?.popToViewController(self, animated: true)
                 return
             }
             
-            self.navigationController?.pushViewController(
-                IfLetStoreController(
-                    store: self.store
-                        .scope(state: \.googleDrive, action: Library.Action.googleDrive)
-                ) {
-                    GoogleDriveViewController(store: $0)
-                } else: {
-                    UIViewController()
-                },
-                animated: true
-            )
+            switch pushNavigation {
+            case .googleDrive:
+                self.navigationController?.pushViewController(
+                    IfLetStoreController(
+                        store: self.store
+                            .scope(state: \.googleDrive, action: Library.Action.googleDrive)
+                    ) {
+                        GoogleDriveViewController(store: $0)
+                    } else: {
+                        UIViewController()
+                    },
+                    animated: true
+                )
+            }
+        }
+        .store(in: &self.cancellables)
+        
+        self.viewStore.publisher.modalNavigation.sink { [unowned self] modalNavigation in
+            guard let modalNavigation = modalNavigation else {
+                self.dismiss(animated: true)
+                return
+            }
+            
+            switch modalNavigation {
+            case .audioFileOptions:
+                self.present(
+                    IfLetStoreController(
+                        store: self.store
+                        .scope(state: \.audioFileOptions, action: Library.Action.audioFileOptions)
+                    ) {
+                        AudioFileOptionsViewController(store: $0)
+                    } else: {
+                        UIViewController()
+                    },
+                    animated: true
+                )
+            }
         }
         .store(in: &self.cancellables)
     }
@@ -114,7 +140,7 @@ public class LibraryViewController: UIViewController {
             let button = UIButton()
             button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
             button.tag = indexPath.row
-            button.addTarget(self, action: #selector(self.handleMoreButtonTap), for: .touchUpInside)
+            button.addTarget(self, action: #selector(self.handleOptionsButtonTap), for: .touchUpInside)
             cell.accessories = [
                 .customView(
                     configuration: UICellAccessory.CustomViewConfiguration(
@@ -195,8 +221,8 @@ public class LibraryViewController: UIViewController {
         .store(in: &self.cancellables)
     }
     
-    @objc private func handleMoreButtonTap(_ sender: UIButton) {
-        print("#: ", sender.tag)
+    @objc private func handleOptionsButtonTap(_ sender: UIButton) {
+        viewStore.send(.navigateToAudioFileOptions(selection: sender.tag))
     }
     
 }

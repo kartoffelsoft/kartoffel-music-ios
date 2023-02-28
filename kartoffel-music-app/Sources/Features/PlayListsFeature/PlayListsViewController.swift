@@ -9,7 +9,7 @@ public class PlayListsViewController: UIViewController {
     
     private let store: StoreOf<PlayLists>
     private let viewStore: ViewStoreOf<PlayLists>
-    private var cancellables: [AnyCancellable] = []
+    private var cancellables: Set<AnyCancellable> = []
     
     public init(store: StoreOf<PlayLists>) {
         self.store = store
@@ -26,12 +26,6 @@ public class PlayListsViewController: UIViewController {
         
         setupNavigation()
         setupNavigationBar()
-    }
-    
-    public override func viewDidAppear(_ animated: Bool) {
-        if !self.isMovingToParent {
-            self.viewStore.send(.navigateToPlayListCreate(false))
-        }
     }
     
     private func setupNavigationBar() {
@@ -52,7 +46,7 @@ public class PlayListsViewController: UIViewController {
     }
     
     private func setupNavigation() {
-        self.viewStore.publisher.isNavigationActive.sink { [weak self] isNavigationActive in
+        viewStore.publisher.isNavigationActive.sink { [weak self] isNavigationActive in
             guard let self = self else { return }
             if isNavigationActive {
                 self.present(
@@ -74,7 +68,7 @@ public class PlayListsViewController: UIViewController {
     }
     
     @objc private func handleAddButtonTap() {
-        self.viewStore.send(.navigateToPlayListCreate(true))
+        viewStore.send(.navigateToPlayListCreate(true))
     }
     
 }

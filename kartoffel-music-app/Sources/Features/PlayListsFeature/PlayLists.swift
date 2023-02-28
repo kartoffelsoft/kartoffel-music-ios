@@ -26,8 +26,6 @@ public struct PlayLists: ReducerProtocol {
                 state.playListCreate = PlayListCreate.State()
                 return .none
             case .navigateToPlayListCreate(false):
-                state.isNavigationActive = false
-                state.playListCreate = nil
                 return .none
             case .playListCreate(.dismiss):
                 state.isNavigationActive = false

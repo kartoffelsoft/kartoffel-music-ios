@@ -1,3 +1,4 @@
+import AudioFileOptionsFeature
 import CommonModels
 import ComposableArchitecture
 import FileListReadUseCase
@@ -5,14 +6,23 @@ import GoogleDriveFeature
 
 public struct Library: ReducerProtocol {
     
+    enum PushNavigation {
+        case googleDrive
+    }
+    
+    enum ModalNavigation {
+        case audioFileOptions
+    }
+    
     public struct State: Equatable {
-        var activeStorageProviderId: Int? = nil
-        var googleDrive: GoogleDrive.State?
+        var pushNavigation: PushNavigation? = nil
+        var modalNavigation: ModalNavigation? =  nil
+        var googleDrive: GoogleDrive.State? = nil
+        var audioFileOptions: AudioFileOptions.State? = nil
         
         var files: IdentifiedArrayOf<LibraryFileViewModel> = []
         
         public init() {
-            googleDrive = .init()
         }
     }
     
@@ -20,7 +30,9 @@ public struct Library: ReducerProtocol {
         case initialize
         case receiveFileList(TaskResult<[MusicMetaModel]>)
         case navigateToStorageProvider(selection: Int?)
+        case navigateToAudioFileOptions(selection: Int?)
         case googleDrive(GoogleDrive.Action)
+        case audioFileOptions(AudioFileOptions.Action)
     }
     
     @Dependency(\.fileListReadUseCase) var fileListReadUseCase
@@ -50,23 +62,43 @@ public struct Library: ReducerProtocol {
             case .receiveFileList(.failure(_)):
                 return .none
                 
-            case let .navigateToStorageProvider(selection: .some(id)):
-                state.activeStorageProviderId = id
-                state.googleDrive = GoogleDrive.State()
+            case .navigateToStorageProvider(selection: .some(_)):
+                state.pushNavigation = .googleDrive
+                state.googleDrive = .init()
                 return .none
                 
             case .navigateToStorageProvider(selection: .none):
-                state.activeStorageProviderId = nil
+                state.pushNavigation = nil
                 state.googleDrive = nil
                 return .none
                 
+            case let .navigateToAudioFileOptions(selection: .some(index)):
+                state.modalNavigation = .audioFileOptions
+                state.audioFileOptions = .init(id: state.files[index].id)
+                return .none
+                
+            case .navigateToAudioFileOptions(selection: .none):
+                return .none
+                
             case .googleDrive:
+                return .none
+                
+            case .audioFileOptions(.dismiss):
+                state.modalNavigation = nil
+                state.audioFileOptions = nil
+                return .none
+                
+            case .audioFileOptions:
                 return .none
             }
         }
         .ifLet(\.googleDrive, action: /Action.googleDrive) {
             GoogleDrive()
         }
+        .ifLet(\.audioFileOptions, action: /Action.audioFileOptions) {
+            AudioFileOptions()
+        }
+        
     }
     
 }

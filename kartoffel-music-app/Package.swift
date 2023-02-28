@@ -13,6 +13,10 @@ let package = Package(
             targets: ["AppRootFeature"]
         ),
         .library(
+            name: "AudioFileOptionsFeature",
+            targets: ["AudioFileOptionsFeature"]
+        ),
+        .library(
             name: "GoogleDriveFeature",
             targets: ["GoogleDriveFeature"]
         ),
@@ -71,6 +75,14 @@ let package = Package(
             path: "./Sources/Features/AppRootFeature"
         ),
         .target(
+            name: "AudioFileOptionsFeature",
+            dependencies: [
+                "StyleGuide",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "./Sources/Features/AudioFileOptionsFeature"
+        ),
+        .target(
             name: "GoogleDriveFeature",
             dependencies: [
                 "CommonModels",
@@ -86,6 +98,7 @@ let package = Package(
         .target(
             name: "LibraryFeature",
             dependencies: [
+                "AudioFileOptionsFeature",
                 "FileListReadUseCase",
                 "GoogleDriveFeature",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")

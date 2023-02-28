@@ -150,7 +150,7 @@ class DownloadBarView: UIView {
             downloadButton.isEnabled = false
             downloadingView.isHidden = true
             downloadButton.setTitle("Download", for: .normal)
-            downloadButton.setTitleColor(.theme.primary, for: .normal)
+            downloadButton.setTitleColor(.theme.background100, for: .normal)
             downloadButton.backgroundColor = .theme.background300
         case let .selected(count):
             downloadButton.isHidden = false
