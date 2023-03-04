@@ -3,16 +3,14 @@ import CommonModels
 import Foundation
 import IdentifiedCollections
 
-public class AppFileManager {
+public class AudioFileManager {
     
-    public static let database = AppFileManager()
+    public static let database = AudioFileManager()
 
     private let url: URL
     private var audioMetaDataStorage: IdentifiedArrayOf<AudioMetaData> = []
     
-    private init() {
-        print("# AppFileManager init")
-        
+    private init() {        
         self.url = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask

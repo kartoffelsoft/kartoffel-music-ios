@@ -55,8 +55,8 @@ let package = Package(
         ),
         
         .library(
-            name: "AppFileManager",
-            targets: ["AppFileManager"]
+            name: "AudioFileManager",
+            targets: ["AudioFileManager"]
         ),
         
         .library(
@@ -151,7 +151,7 @@ let package = Package(
         .target(
             name: "FileListReadUseCase",
             dependencies: [
-                "AppFileManager",
+                "AudioFileManager",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/FileListReadUseCase"
@@ -171,12 +171,12 @@ let package = Package(
         ),
         
         .target(
-            name: "AppFileManager",
+            name: "AudioFileManager",
             dependencies: [
                 "CommonModels",
                 .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
             ],
-            path: "./Sources/Services/AppFileManager"
+            path: "./Sources/Services/AudioFileManager"
         ),
         
         .target(
