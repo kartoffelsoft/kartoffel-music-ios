@@ -5,6 +5,7 @@ import FileReadUseCase
 public struct AudioFileOptions: ReducerProtocol {
     public struct State: Equatable {
         let id: String
+        var viewData: AudioFileOptionsViewData?
         
         public init(id: String) {
             self.id = id
@@ -33,6 +34,14 @@ public struct AudioFileOptions: ReducerProtocol {
                 }
 
             case let .receiveMetaData(.success(data)):
+                guard let data = data else { return .none }
+                state.viewData = .init(
+                    id: data.id,
+                    title: data.title,
+                    artist: data.artist,
+                    albumName: data.albumName,
+                    artwork: data.artwork
+                )
                 return .none
                 
             case .receiveMetaData(.failure):
