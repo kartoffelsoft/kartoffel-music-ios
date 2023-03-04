@@ -83,16 +83,14 @@ public struct GoogleDrive: ReducerProtocol {
                 return .none
                 
             case let .receiveFileDownload(.success(.response(data))):
-                guard let id = state.downloadQueue.first,
-                      let name = state.files[id: id]?.name
-                else { return .none }
+                guard let id = state.downloadQueue.first else { return .none }
                 
                 state.files[id: id]?.accessoryViewData = .completed
                 state.downloadQueue.removeFirst()
                 state.downloadBar = .downloading(state.downloadQueue.done, state.downloadQueue.total)
                 
                 return .run { send in
-                    try await fileCreateUseCase.start(name, data)
+                    try await fileCreateUseCase.start(id, data)
                     await send(.requestFileDownload)
                 }
                 
