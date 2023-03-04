@@ -42,10 +42,6 @@ let package = Package(
         ),
 
         .library(
-            name: "CommonModels",
-            targets: ["CommonModels"]
-        ),
-        .library(
             name: "FileCreateUseCase",
             targets: ["FileCreateUseCase"]
         ),
@@ -56,6 +52,16 @@ let package = Package(
         .library(
             name: "GoogleDriveUseCase",
             targets: ["GoogleDriveUseCase"]
+        ),
+        
+        .library(
+            name: "AppFileManager",
+            targets: ["AppFileManager"]
+        ),
+        
+        .library(
+            name: "CommonModels",
+            targets: ["CommonModels"]
         ),
     ],
     dependencies: [
@@ -144,6 +150,7 @@ let package = Package(
         .target(
             name: "FileListReadUseCase",
             dependencies: [
+                "AppFileManager",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/FileListReadUseCase"
@@ -161,9 +168,17 @@ let package = Package(
             ],
             path: "./Sources/UseCases/GoogleDriveUseCase"
         ),
+        
+        .target(
+            name: "AppFileManager",
+            dependencies: [],
+            path: "./Sources/Services/AppFileManager"
+        ),
+        
         .target(
             name: "CommonModels"
         ),
+        
         .testTarget(
             name: "LibraryFeatureTests",
             dependencies: ["LibraryFeature"],
