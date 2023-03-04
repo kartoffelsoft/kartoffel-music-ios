@@ -1,6 +1,6 @@
 import Foundation
 
-public struct MusicMetaModel: Equatable {
+public struct AudioFileMetaData: Equatable {
     
     public let id: String
     public let title: String?

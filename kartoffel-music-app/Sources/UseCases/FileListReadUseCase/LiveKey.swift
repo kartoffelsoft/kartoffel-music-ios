@@ -44,7 +44,7 @@ extension FileListReadUseCase: DependencyKey {
                     filteredByIdentifier: .commonIdentifierArtwork
                 ).first?.value as? Data
 
-                return MusicMetaModel(
+                return AudioFileMetaData(
                     id: id,
                     title: title,
                     artist: artist,

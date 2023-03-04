@@ -23,7 +23,7 @@ extension GoogleDriveUseCase: DependencyKey {
             guard let result = result else { return [] }
             
             return result.compactMap { file in
-                return FileModel(from: file)
+                return FileData(from: file)
             }
         },
         downloadFile: { id in
@@ -65,7 +65,7 @@ extension GoogleDriveUseCase: DependencyKey {
 
 private let service = GTLRDriveService()
 
-private extension FileModel {
+private extension FileData {
     
     init?(from: GTLRDrive_File) {
         guard let id = from.identifier, let name = from.name else { return nil }

@@ -1,4 +1,4 @@
-enum DownloadBarViewModel: Equatable, Hashable {
+enum DownloadBarViewData: Equatable, Hashable {
     
     case nothing
     case selected(Int)

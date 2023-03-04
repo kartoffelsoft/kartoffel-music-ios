@@ -5,7 +5,7 @@ import Foundation
 public class GoogleDriveUseCase {
     
     public var setAuthorizer: () -> Void
-    public var retrieveFileList: () async throws -> [FileModel]
+    public var retrieveFileList: () async throws -> [FileData]
     public var downloadFile: @Sendable (_ id: String) -> AsyncThrowingStream<DownloadEvent, Error>
 
     public enum DownloadEvent: Equatable {
@@ -15,7 +15,7 @@ public class GoogleDriveUseCase {
     
     init(
         setAuthorizer: @escaping () -> Void,
-        retrieveFileList: @escaping () async throws -> [FileModel],
+        retrieveFileList: @escaping () async throws -> [FileData],
         downloadFile: @escaping @Sendable (_ id: String) -> AsyncThrowingStream<DownloadEvent, Error>
     ) {
         self.setAuthorizer = setAuthorizer

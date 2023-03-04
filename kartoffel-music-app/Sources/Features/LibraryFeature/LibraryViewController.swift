@@ -124,7 +124,7 @@ public class LibraryViewController: UIViewController {
     }
     
     private func setupDatasource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, LibraryFileViewModel> { [unowned self] cell, indexPath, file in
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, LibraryFileViewData> { [unowned self] cell, indexPath, file in
             var content = cell.defaultContentConfiguration()
             content.text = file.title ?? "Unknown"
             content.textProperties.color = .theme.primary
@@ -165,7 +165,7 @@ public class LibraryViewController: UIViewController {
                     return collectionView.dequeueConfiguredReusableCell(
                         using: cellRegistration,
                         for: indexPath,
-                        item: file as? LibraryFileViewModel
+                        item: file as? LibraryFileViewData
                     )
                 case .none:
                     break

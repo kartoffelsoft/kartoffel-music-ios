@@ -1,6 +1,6 @@
 import Foundation
 
-struct LibraryFileViewModel: Equatable, Hashable, Identifiable {
+struct LibraryFileViewData: Equatable, Hashable, Identifiable {
     
     let id: String
     let title: String?

@@ -18,7 +18,7 @@ public class GoogleDriveViewController: UIViewController {
     private let downloadBarView = DownloadBarView()
 
     private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<Section, FileViewModel>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, FileViewData>!
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -53,7 +53,7 @@ public class GoogleDriveViewController: UIViewController {
     
     private func setupBindings() {
         self.viewStore.publisher.files.sink { [weak self] files in
-            var snapshot = NSDiffableDataSourceSnapshot<Section, FileViewModel>()
+            var snapshot = NSDiffableDataSourceSnapshot<Section, FileViewData>()
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems(files.elements)
             self?.dataSource.apply(snapshot, animatingDifferences: false)
@@ -91,7 +91,7 @@ public class GoogleDriveViewController: UIViewController {
     }
     
     private func setupDatasource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, FileViewModel> { cell, _, file in
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, FileViewData> { cell, _, file in
             var content = cell.defaultContentConfiguration()
             content.text = file.name
             content.textProperties.color = .theme.primary
@@ -100,7 +100,7 @@ public class GoogleDriveViewController: UIViewController {
             cell.accessories = [
                 .customView(
                     configuration: UICellAccessory.CustomViewConfiguration(
-                        customView: DownloadAccessoryView(state: file.accessoryViewModel),
+                        customView: DownloadAccessoryView(state: file.accessoryViewData),
                         placement: .trailing(displayed: .always),
                         tintColor: .theme.primary
                     )
@@ -108,7 +108,7 @@ public class GoogleDriveViewController: UIViewController {
             ]
         }
         
-        dataSource = UICollectionViewDiffableDataSource<Section, FileViewModel>(
+        dataSource = UICollectionViewDiffableDataSource<Section, FileViewData>(
             collectionView: collectionView,
             cellProvider: { collectionView, indexPath, file in
                 return collectionView.dequeueConfiguredReusableCell(

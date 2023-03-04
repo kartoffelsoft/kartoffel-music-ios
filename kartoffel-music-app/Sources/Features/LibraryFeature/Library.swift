@@ -20,7 +20,7 @@ public struct Library: ReducerProtocol {
         var googleDrive: GoogleDrive.State? = nil
         var audioFileOptions: AudioFileOptions.State? = nil
         
-        var files: IdentifiedArrayOf<LibraryFileViewModel> = []
+        var files: IdentifiedArrayOf<LibraryFileViewData> = []
         
         public init() {
         }
@@ -28,7 +28,7 @@ public struct Library: ReducerProtocol {
     
     public enum Action: Equatable {
         case initialize
-        case receiveFileList(TaskResult<[MusicMetaModel]>)
+        case receiveFileList(TaskResult<[AudioFileMetaData]>)
         case navigateToStorageProvider(selection: Int?)
         case navigateToAudioFileOptions(selection: Int?)
         case googleDrive(GoogleDrive.Action)
@@ -51,7 +51,7 @@ public struct Library: ReducerProtocol {
                 
             case let .receiveFileList(.success(files)):
                 state.files.append(contentsOf: files.map({
-                    LibraryFileViewModel(
+                    LibraryFileViewData(
                         id: $0.id,
                         title: $0.title,
                         artist: $0.artist,

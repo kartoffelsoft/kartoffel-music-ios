@@ -3,12 +3,12 @@ import StyleGuide
 
 class DownloadAccessoryView: UIView {
     
-    private let state: DownloadAccessoryViewModel
+    private let state: DownloadAccessoryViewData
     
     private var baseCircleLayer = CAShapeLayer()
     private var progressCircleLayer = CAShapeLayer()
     
-    init(state: DownloadAccessoryViewModel) {
+    init(state: DownloadAccessoryViewData) {
         self.state = state
         super.init(frame: .zero)
     }

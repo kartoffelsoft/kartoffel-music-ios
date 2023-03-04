@@ -143,7 +143,7 @@ class DownloadBarView: UIView {
         ])
     }
     
-    func render(with data: DownloadBarViewModel) {
+    func render(with data: DownloadBarViewData) {
         switch data {
         case .nothing:
             downloadButton.isHidden = false

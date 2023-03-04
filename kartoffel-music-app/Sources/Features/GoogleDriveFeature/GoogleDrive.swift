@@ -8,13 +8,13 @@ import UIKit
 public struct GoogleDrive: ReducerProtocol {
     
     public struct State: Equatable {
-        var files: IdentifiedArrayOf<FileViewModel> = []
-        var downloadBar: DownloadBarViewModel = .nothing
+        var files: IdentifiedArrayOf<FileViewData> = []
+        var downloadBar: DownloadBarViewData = .nothing
         var downloadQueue: DownloadQueue = .init([])
         
         var selectedFileIds: [String] {
             return files.compactMap { file in
-                guard case .selected = file.accessoryViewModel else { return nil }
+                guard case .selected = file.accessoryViewData else { return nil }
                 return file.id
             }
         }
@@ -25,7 +25,7 @@ public struct GoogleDrive: ReducerProtocol {
     public enum Action: Equatable {
         case initialize
         case requestFileList
-        case receiveFileList(TaskResult<[FileModel]>)
+        case receiveFileList(TaskResult<[FileData]>)
         case requestFileDownload
         case receiveFileDownload(TaskResult<GoogleDriveUseCase.DownloadEvent>)
         
@@ -56,7 +56,7 @@ public struct GoogleDrive: ReducerProtocol {
                 
             case let .receiveFileList(.success(files)):
                 state.files.append(contentsOf: files.map({
-                    FileViewModel(id: $0.id, name: $0.name)
+                    FileViewData(id: $0.id, name: $0.name)
                 }))
                 return .none
                 
@@ -79,7 +79,7 @@ public struct GoogleDrive: ReducerProtocol {
                 
             case let .receiveFileDownload(.success(.updateProgress(progress))):
                 guard let id = state.downloadQueue.first else { return .none }
-                state.files[id: id]?.accessoryViewModel = .selected(.downloading(progress))
+                state.files[id: id]?.accessoryViewData = .selected(.downloading(progress))
                 return .none
                 
             case let .receiveFileDownload(.success(.response(data))):
@@ -87,7 +87,7 @@ public struct GoogleDrive: ReducerProtocol {
                       let name = state.files[id: id]?.name
                 else { return .none }
                 
-                state.files[id: id]?.accessoryViewModel = .completed
+                state.files[id: id]?.accessoryViewData = .completed
                 state.downloadQueue.removeFirst()
                 state.downloadBar = .downloading(state.downloadQueue.done, state.downloadQueue.total)
                 
@@ -101,11 +101,11 @@ public struct GoogleDrive: ReducerProtocol {
                 
             case let .didSelectItemAt(index):
                 if case .downloading = state.downloadBar { return .none }
-                switch state.files[index].accessoryViewModel {
+                switch state.files[index].accessoryViewData {
                 case .nothing:
-                    state.files[index].accessoryViewModel = .selected(.nothing)
+                    state.files[index].accessoryViewData = .selected(.nothing)
                 case .selected:
-                    state.files[index].accessoryViewModel = .nothing
+                    state.files[index].accessoryViewData = .nothing
                 default:
                     ()
                 }
@@ -120,7 +120,7 @@ public struct GoogleDrive: ReducerProtocol {
                 state.downloadQueue.reload(ids)
                 state.downloadBar = .downloading(0, ids.count)
                 ids.forEach { id in
-                    state.files[id: id]?.accessoryViewModel = .selected(.waiting)
+                    state.files[id: id]?.accessoryViewData = .selected(.waiting)
                 }
                 return .run { send in await send(.requestFileDownload) }
                 

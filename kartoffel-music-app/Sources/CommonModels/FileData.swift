@@ -1,5 +1,5 @@
 
-public struct FileModel: Equatable, Hashable {
+public struct FileData: Equatable, Hashable {
     
     public let id: String
     public let name: String
