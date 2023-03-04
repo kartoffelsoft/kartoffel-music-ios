@@ -139,6 +139,7 @@ public class LibraryViewController: UIViewController {
             
             let button = UIButton()
             button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+            button.frame = .init(x: 0, y: 0, width: 48, height: 48)
             button.tag = indexPath.row
             button.addTarget(self, action: #selector(self.handleOptionsButtonTap), for: .touchUpInside)
             cell.accessories = [
@@ -146,7 +147,8 @@ public class LibraryViewController: UIViewController {
                     configuration: UICellAccessory.CustomViewConfiguration(
                         customView: button,
                         placement: .trailing(displayed: .always),
-                        tintColor: .theme.primary
+                        tintColor: .theme.primary,
+                        maintainsFixedSize: true
                     )
                 )
             ]
