@@ -30,6 +30,8 @@ public class AudioFileOptionsViewController: UIViewController {
         view.addSubview(blurEffectView)
         
         parent?.presentationController?.delegate = self
+        
+        viewStore.send(.initialize)
     }
     
 }

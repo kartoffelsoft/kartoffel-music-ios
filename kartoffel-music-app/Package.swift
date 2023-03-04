@@ -50,6 +50,10 @@ let package = Package(
             targets: ["FileListReadUseCase"]
         ),
         .library(
+            name: "FileReadUseCase",
+            targets: ["FileReadUseCase"]
+        ),
+        .library(
             name: "GoogleDriveUseCase",
             targets: ["GoogleDriveUseCase"]
         ),
@@ -84,6 +88,8 @@ let package = Package(
         .target(
             name: "AudioFileOptionsFeature",
             dependencies: [
+                "CommonModels",
+                "FileReadUseCase",
                 "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
@@ -155,6 +161,14 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/FileListReadUseCase"
+        ),
+        .target(
+            name: "FileReadUseCase",
+            dependencies: [
+                "AudioFileManager",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "./Sources/UseCases/FileReadUseCase"
         ),
         .target(
             name: "GoogleDriveUseCase",

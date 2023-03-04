@@ -27,7 +27,7 @@ public class AudioFileManager {
     }
     
     public func readAudioMetaData(id: String) async throws  -> AudioMetaData? {
-        return nil
+        return audioMetaDataStorage[id: id]
     }
  
     private func invalidate() async throws {
