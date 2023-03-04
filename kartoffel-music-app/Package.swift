@@ -68,6 +68,7 @@ let package = Package(
         .package(url: "https://github.com/google/google-api-objectivec-client-for-rest", exact: "3.0.0"),
         .package(url: "https://github.com/google/GoogleSignIn-iOS", exact: "7.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "0.50.0"),
+        .package(url: "https://github.com/pointfreeco/swift-identified-collections", exact: "0.6.0"),
     ],
     targets: [
         .target(
@@ -171,7 +172,10 @@ let package = Package(
         
         .target(
             name: "AppFileManager",
-            dependencies: [],
+            dependencies: [
+                "CommonModels",
+                .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
+            ],
             path: "./Sources/Services/AppFileManager"
         ),
         

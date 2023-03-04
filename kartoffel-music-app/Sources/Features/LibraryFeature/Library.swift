@@ -28,7 +28,7 @@ public struct Library: ReducerProtocol {
     
     public enum Action: Equatable {
         case initialize
-        case receiveFileList(TaskResult<[AudioFileMetaData]>)
+        case receiveFileList(TaskResult<[AudioMetaData]>)
         case navigateToStorageProvider(selection: Int?)
         case navigateToAudioFileOptions(selection: Int?)
         case googleDrive(GoogleDrive.Action)
