@@ -21,7 +21,7 @@ public struct Library: ReducerProtocol {
         var googleDrive: GoogleDrive.State? = nil
         var audioFileOptions: AudioFileOptions.State? = nil
         
-        var files: IdentifiedArrayOf<LibraryFileViewData> = []
+        var files: IdentifiedArrayOf<AudioFileCellData> = []
         
         public init() {
         }
@@ -61,11 +61,13 @@ public struct Library: ReducerProtocol {
             case let .receiveFileList(.success(files)):
                 state.files.removeAll()
                 state.files.append(contentsOf: files.map({
-                    LibraryFileViewData(
+                    AudioFileCellData(
                         id: $0.id,
                         title: $0.title,
                         artist: $0.artist,
-                        artwork: $0.artwork)
+                        artwork: $0.artwork,
+                        playState: .stop
+                    )
                 }))
                 return .none
                 

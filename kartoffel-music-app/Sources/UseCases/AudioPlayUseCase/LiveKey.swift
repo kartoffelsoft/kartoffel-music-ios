@@ -1,5 +1,5 @@
-import ComposableArchitecture
 import AVFoundation
+import ComposableArchitecture
 
 extension AudioPlayUseCase: DependencyKey {
     
@@ -12,8 +12,6 @@ extension AudioPlayUseCase: DependencyKey {
                     try AVAudioSession.sharedInstance().setMode(.default)
                     try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
                     try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-                    
-                    print("@2")
                     
                     let url = FileManager.default.urls(
                             for: .documentDirectory,

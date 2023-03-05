@@ -117,42 +117,16 @@ public class LibraryViewController: UIViewController {
             StorageProviderCell.self,
             forCellWithReuseIdentifier: StorageProviderCell.reuseIdentifier
         )
+        collectionView.register(
+            AudioFileCell.self,
+            forCellWithReuseIdentifier: AudioFileCell.reuseIdentifier
+        )
     }
     
     private func setupDatasource() {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, LibraryFileViewData> { [unowned self] cell, indexPath, file in
-            var content = cell.defaultContentConfiguration()
-            content.text = file.title ?? "Unknown"
-            content.textProperties.color = .theme.primary
-            content.secondaryText = file.artist ?? "Unknown artist"
-            content.secondaryTextProperties.color = .theme.primary
-            content.directionalLayoutMargins = .init(top: 4, leading: 0, bottom: 4, trailing: 0)
-            if let artwork = file.artwork {
-                content.image = UIImage(data: artwork)
-            }
-            cell.contentConfiguration = content
-            cell.backgroundConfiguration?.backgroundColor = .theme.background
-            
-            let button = UIButton()
-            button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
-            button.frame = .init(x: 0, y: 0, width: 48, height: 48)
-            button.tag = indexPath.row
-            button.addTarget(self, action: #selector(self.handleOptionsButtonTap), for: .touchUpInside)
-            cell.accessories = [
-                .customView(
-                    configuration: UICellAccessory.CustomViewConfiguration(
-                        customView: button,
-                        placement: .trailing(displayed: .always),
-                        tintColor: .theme.primary,
-                        maintainsFixedSize: true
-                    )
-                )
-            ]
-        }
-        
         dataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>(
             collectionView: collectionView,
-            cellProvider: { collectionView, indexPath, file in
+            cellProvider: { collectionView, indexPath, data in
                 switch(Section(rawValue: indexPath.section)) {
                 case .storageProviders:
                     return collectionView.dequeueReusableCell(
@@ -160,11 +134,18 @@ public class LibraryViewController: UIViewController {
                         for: indexPath
                     )
                 case .localFiles:
-                    return collectionView.dequeueConfiguredReusableCell(
-                        using: cellRegistration,
-                        for: indexPath,
-                        item: file as? LibraryFileViewData
+                    let cell = collectionView.dequeueReusableCell(
+                        withReuseIdentifier: AudioFileCell.reuseIdentifier,
+                        for: indexPath
+                    ) as! AudioFileCell
+                    cell.data = data as? AudioFileCellData
+                    cell.optionsButton.tag = indexPath.row
+                    cell.optionsButton.addTarget(
+                        self,
+                        action: #selector(self.handleOptionsButtonTap),
+                        for: .touchUpInside
                     )
+                    return cell
                 case .none:
                     break
                 }
