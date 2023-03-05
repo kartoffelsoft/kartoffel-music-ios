@@ -42,16 +42,16 @@ let package = Package(
         ),
 
         .library(
-            name: "FileCreateUseCase",
-            targets: ["FileCreateUseCase"]
+            name: "AudioFileCreateUseCase",
+            targets: ["AudioFileCreateUseCase"]
         ),
         .library(
-            name: "FileListReadUseCase",
-            targets: ["FileListReadUseCase"]
+            name: "AudioFileReadAllUseCase",
+            targets: ["AudioFileReadAllUseCase"]
         ),
         .library(
-            name: "FileReadUseCase",
-            targets: ["FileReadUseCase"]
+            name: "AudioFileReadUseCase",
+            targets: ["AudioFileReadUseCase"]
         ),
         .library(
             name: "GoogleDriveUseCase",
@@ -89,7 +89,7 @@ let package = Package(
             name: "AudioFileOptionsFeature",
             dependencies: [
                 "CommonModels",
-                "FileReadUseCase",
+                "AudioFileReadUseCase",
                 "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
@@ -99,7 +99,7 @@ let package = Package(
             name: "GoogleDriveFeature",
             dependencies: [
                 "CommonModels",
-                "FileCreateUseCase",
+                "AudioFileCreateUseCase",
                 "GoogleDriveUseCase",
                 "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -112,7 +112,7 @@ let package = Package(
             name: "LibraryFeature",
             dependencies: [
                 "AudioFileOptionsFeature",
-                "FileListReadUseCase",
+                "AudioFileReadAllUseCase",
                 "GoogleDriveFeature",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
@@ -148,27 +148,27 @@ let package = Package(
         ),
 
         .target(
-            name: "FileCreateUseCase",
+            name: "AudioFileCreateUseCase",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
-            path: "./Sources/UseCases/FileCreateUseCase"
+            path: "./Sources/UseCases/AudioFileCreateUseCase"
         ),
         .target(
-            name: "FileListReadUseCase",
+            name: "AudioFileReadAllUseCase",
             dependencies: [
                 "AudioFileManager",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
-            path: "./Sources/UseCases/FileListReadUseCase"
+            path: "./Sources/UseCases/AudioFileReadAllUseCase"
         ),
         .target(
-            name: "FileReadUseCase",
+            name: "AudioFileReadUseCase",
             dependencies: [
                 "AudioFileManager",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
-            path: "./Sources/UseCases/FileReadUseCase"
+            path: "./Sources/UseCases/AudioFileReadUseCase"
         ),
         .target(
             name: "GoogleDriveUseCase",

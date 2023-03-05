@@ -1,6 +1,6 @@
 import Foundation
 
-public class FileCreateUseCase {
+public class AudioFileCreateUseCase {
     
     public var start: (String, Data) async throws -> Void
     

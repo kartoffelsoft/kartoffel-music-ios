@@ -21,7 +21,7 @@ public class AudioFileManager {
         try data.write(to: url.appendingPathComponent("\(id).mp3"))
     }
     
-    public func readAllAudioMetaData() async throws  -> [AudioMetaData] {
+    public func readAudioMetaDataAll() async throws  -> [AudioMetaData] {
         try await invalidate()
         return audioMetaDataStorage.elements
     }

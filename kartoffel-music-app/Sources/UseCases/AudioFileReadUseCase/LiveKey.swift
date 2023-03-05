@@ -1,9 +1,9 @@
 import AudioFileManager
 import ComposableArchitecture
 
-extension FileReadUseCase: DependencyKey {
+extension AudioFileReadUseCase: DependencyKey {
     
-    static public var liveValue = FileReadUseCase(
+    static public var liveValue = AudioFileReadUseCase(
         start: { id in
             return try await AudioFileManager.database.readAudioMetaData(id: id)
         }

@@ -1,9 +1,9 @@
 import AudioFileManager
 import ComposableArchitecture
 
-extension FileCreateUseCase: DependencyKey {
+extension AudioFileCreateUseCase: DependencyKey {
     
-    static public var liveValue = FileCreateUseCase(
+    static public var liveValue = AudioFileCreateUseCase(
         start: { id, data in
             try await AudioFileManager.database.createAudioFile(id: id, data: data)
         }

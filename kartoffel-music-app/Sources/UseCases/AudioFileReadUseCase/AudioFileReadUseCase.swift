@@ -2,7 +2,7 @@ import CommonModels
 import ComposableArchitecture
 import Foundation
 
-public class FileReadUseCase {
+public class AudioFileReadUseCase {
     
     public var start: @Sendable (String) async throws -> AudioMetaData?
     

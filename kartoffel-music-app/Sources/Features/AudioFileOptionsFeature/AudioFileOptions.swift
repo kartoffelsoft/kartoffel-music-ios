@@ -1,6 +1,6 @@
 import ComposableArchitecture
 import CommonModels
-import FileReadUseCase
+import AudioFileReadUseCase
 
 public struct AudioFileOptions: ReducerProtocol {
     public struct State: Equatable {
@@ -19,7 +19,7 @@ public struct AudioFileOptions: ReducerProtocol {
         case dismiss
     }
     
-    @Dependency(\.fileReadUseCase) var fileReadUseCase
+    @Dependency(\.audioFileReadUseCase) var audioFileReadUseCase
     
     public init() {}
     
@@ -29,7 +29,7 @@ public struct AudioFileOptions: ReducerProtocol {
             case .initialize:
                 return .task { [id = state.id] in
                     await .receiveMetaData(TaskResult {
-                        try await fileReadUseCase.start(id)
+                        try await audioFileReadUseCase.start(id)
                     })
                 }
 

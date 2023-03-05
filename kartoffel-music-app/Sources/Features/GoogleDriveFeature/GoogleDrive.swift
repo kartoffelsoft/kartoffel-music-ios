@@ -1,6 +1,6 @@
 import CommonModels
 import ComposableArchitecture
-import FileCreateUseCase
+import AudioFileCreateUseCase
 import GoogleSignIn
 import GoogleDriveUseCase
 import UIKit
@@ -35,7 +35,7 @@ public struct GoogleDrive: ReducerProtocol {
         case didTapCancelButton
     }
     
-    @Dependency(\.fileCreateUseCase) var fileCreateUseCase
+    @Dependency(\.audioFileCreateUseCase) var audioFileCreateUseCase
     @Dependency(\.googleDriveUseCase) var googleDriveUseCase
     
     public init() {}
@@ -90,7 +90,7 @@ public struct GoogleDrive: ReducerProtocol {
                 state.downloadBar = .downloading(state.downloadQueue.done, state.downloadQueue.total)
                 
                 return .run { send in
-                    try await fileCreateUseCase.start(id, data)
+                    try await audioFileCreateUseCase.start(id, data)
                     await send(.requestFileDownload)
                 }
                 

@@ -1,7 +1,7 @@
 import AudioFileOptionsFeature
 import CommonModels
 import ComposableArchitecture
-import FileListReadUseCase
+import AudioFileReadAllUseCase
 import GoogleDriveFeature
 
 public struct Library: ReducerProtocol {
@@ -35,7 +35,7 @@ public struct Library: ReducerProtocol {
         case audioFileOptions(AudioFileOptions.Action)
     }
     
-    @Dependency(\.fileListReadUseCase) var fileListReadUseCase
+    @Dependency(\.audioFileReadAllUseCase) var audioFileReadAllUseCase
     
     public init() {}
     
@@ -45,7 +45,7 @@ public struct Library: ReducerProtocol {
             case .initialize:
                 return .task {
                     await .receiveFileList(TaskResult {
-                        try await fileListReadUseCase.start()
+                        try await audioFileReadAllUseCase.start()
                     })
                 }
                 
