@@ -117,10 +117,6 @@ public class LibraryViewController: UIViewController {
             StorageProviderCell.self,
             forCellWithReuseIdentifier: StorageProviderCell.reuseIdentifier
         )
-        collectionView.register(
-            FileCell.self,
-            forCellWithReuseIdentifier: FileCell.reuseIdentifier
-        )
     }
     
     private func setupDatasource() {
@@ -219,6 +215,7 @@ public class LibraryViewController: UIViewController {
             snapshot.appendItems(StorageProvider.allCases, toSection: .storageProviders)
             snapshot.appendItems((files.elements), toSection: .localFiles)
             self?.dataSource.apply(snapshot)
+            self?.collectionView.reloadData()
         }
         .store(in: &self.cancellables)
     }
@@ -238,6 +235,7 @@ extension LibraryViewController: UICollectionViewDelegate {
             break
 
         case .localFiles:
+            self.viewStore.send(.play(selection: indexPath.row))
             break
             
         case .none:

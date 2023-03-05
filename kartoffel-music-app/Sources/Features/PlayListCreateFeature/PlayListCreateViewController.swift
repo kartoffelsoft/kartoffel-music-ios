@@ -19,17 +19,19 @@ public class PlayListCreateViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        parent?.presentationController?.delegate = self
         
+        setupBackgroundView()
+    }
+
+    private func setupBackgroundView() {
         let blurEffectView = UIVisualEffectView(
             effect: UIBlurEffect(style: UIBlurEffect.Style.dark)
         )
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(blurEffectView)
-        
-        parent?.presentationController?.delegate = self
     }
-
 }
 
 extension PlayListCreateViewController: UIAdaptivePresentationControllerDelegate {

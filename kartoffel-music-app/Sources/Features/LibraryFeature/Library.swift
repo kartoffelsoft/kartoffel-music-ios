@@ -2,6 +2,7 @@ import AudioFileOptionsFeature
 import CommonModels
 import ComposableArchitecture
 import AudioFileReadAllUseCase
+import AudioPlayUseCase
 import GoogleDriveFeature
 
 public struct Library: ReducerProtocol {
@@ -28,6 +29,7 @@ public struct Library: ReducerProtocol {
     
     public enum Action: Equatable {
         case initialize
+        case play(selection: Int)
         case receiveFileList(TaskResult<[AudioMetaData]>)
         case navigateToStorageProvider(selection: Int?)
         case navigateToAudioFileOptions(selection: Int?)
@@ -36,6 +38,7 @@ public struct Library: ReducerProtocol {
     }
     
     @Dependency(\.audioFileReadAllUseCase) var audioFileReadAllUseCase
+    @Dependency(\.audioPlayUseCase) var audioPlayUseCase
     
     public init() {}
     
@@ -49,7 +52,14 @@ public struct Library: ReducerProtocol {
                     })
                 }
                 
+            case let .play(selection):
+                let file = state.files[selection]
+                return .run { [id = file.id] send in
+                    try await audioPlayUseCase.start(id)
+                }
+                
             case let .receiveFileList(.success(files)):
+                state.files.removeAll()
                 state.files.append(contentsOf: files.map({
                     LibraryFileViewData(
                         id: $0.id,
@@ -86,7 +96,11 @@ public struct Library: ReducerProtocol {
             case .audioFileOptions(.dismiss):
                 state.modalNavigation = nil
                 state.audioFileOptions = nil
-                return .none
+                return .task {
+                    await .receiveFileList(TaskResult {
+                        try await audioFileReadAllUseCase.start()
+                    })
+                }
                 
             case .audioFileOptions:
                 return .none

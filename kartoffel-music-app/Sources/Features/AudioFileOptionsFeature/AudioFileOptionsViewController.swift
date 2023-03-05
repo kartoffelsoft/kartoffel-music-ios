@@ -37,10 +37,13 @@ public class AudioFileOptionsViewController: UIViewController {
         return view
     }()
     
+    private let deleteOptionView = OptionView(text: "Delete", image: .init(systemName: "minus.circle"))
+    
     private let closeButton = {
         let button = UIButton()
-        button.setTitle("Close", for: .normal)
+        button.titleLabel?.font = .theme.subhead2
         button.tintColor = .theme.primary
+        button.setTitle("Close", for: .normal)
         return button
     }()
     
@@ -56,8 +59,6 @@ public class AudioFileOptionsViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-
         parent?.presentationController?.delegate = self
         
         setupBackgroundView()
@@ -79,10 +80,12 @@ public class AudioFileOptionsViewController: UIViewController {
     private func setupConstraints() {
         artworkImageView.translatesAutoresizingMaskIntoConstraints = false
         descriptionStackView.translatesAutoresizingMaskIntoConstraints = false
+        deleteOptionView.translatesAutoresizingMaskIntoConstraints = false
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(artworkImageView)
         view.addSubview(descriptionStackView)
+        view.addSubview(deleteOptionView)
         view.addSubview(closeButton)
         
         NSLayoutConstraint.activate([
@@ -95,10 +98,15 @@ public class AudioFileOptionsViewController: UIViewController {
             descriptionStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             descriptionStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
+            deleteOptionView.topAnchor.constraint(equalTo: descriptionStackView.bottomAnchor, constant: 24),
+            deleteOptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,  constant: 16),
+            deleteOptionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            deleteOptionView.heightAnchor.constraint(equalToConstant: 56),
+
             closeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             closeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            closeButton.heightAnchor.constraint(equalToConstant: 52),
+            closeButton.heightAnchor.constraint(equalToConstant: 56),
         ])
     }
     
@@ -114,6 +122,8 @@ public class AudioFileOptionsViewController: UIViewController {
             
             self?.titleLabel.text = data.title
             self?.subtitleLabel.text = data.artist
+            
+            
         }
         .store(in: &self.cancellables)
         
@@ -122,10 +132,17 @@ public class AudioFileOptionsViewController: UIViewController {
             action: #selector(handleCloseButtonTap),
             for: .touchUpInside
         )
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleDeleteOptionTap))
+        deleteOptionView.addGestureRecognizer(tapGesture)
     }
     
     @objc private func handleCloseButtonTap() {
         viewStore.send(.dismiss)
+    }
+    
+    @objc private func handleDeleteOptionTap() {
+        viewStore.send(.delete)
     }
     
 }

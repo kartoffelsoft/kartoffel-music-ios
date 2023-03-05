@@ -46,12 +46,20 @@ let package = Package(
             targets: ["AudioFileCreateUseCase"]
         ),
         .library(
+            name: "AudioFileDeleteUseCase",
+            targets: ["AudioFileDeleteUseCase"]
+        ),
+        .library(
             name: "AudioFileReadAllUseCase",
             targets: ["AudioFileReadAllUseCase"]
         ),
         .library(
             name: "AudioFileReadUseCase",
             targets: ["AudioFileReadUseCase"]
+        ),
+        .library(
+            name: "AudioPlayUseCase",
+            targets: ["AudioPlayUseCase"]
         ),
         .library(
             name: "GoogleDriveUseCase",
@@ -89,6 +97,7 @@ let package = Package(
             name: "AudioFileOptionsFeature",
             dependencies: [
                 "CommonModels",
+                "AudioFileDeleteUseCase",
                 "AudioFileReadUseCase",
                 "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
@@ -113,6 +122,7 @@ let package = Package(
             dependencies: [
                 "AudioFileOptionsFeature",
                 "AudioFileReadAllUseCase",
+                "AudioPlayUseCase",
                 "GoogleDriveFeature",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
@@ -155,6 +165,13 @@ let package = Package(
             path: "./Sources/UseCases/AudioFileCreateUseCase"
         ),
         .target(
+            name: "AudioFileDeleteUseCase",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "./Sources/UseCases/AudioFileDeleteUseCase"
+        ),
+        .target(
             name: "AudioFileReadAllUseCase",
             dependencies: [
                 "AudioFileManager",
@@ -169,6 +186,13 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/AudioFileReadUseCase"
+        ),
+        .target(
+            name: "AudioPlayUseCase",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "./Sources/UseCases/AudioPlayUseCase"
         ),
         .target(
             name: "GoogleDriveUseCase",

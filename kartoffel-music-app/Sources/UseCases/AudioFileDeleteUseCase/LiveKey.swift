@@ -1,11 +1,11 @@
 import AudioFileManager
 import ComposableArchitecture
 
-extension AudioFileCreateUseCase: DependencyKey {
+extension AudioFileDeleteUseCase: DependencyKey {
     
-    static public var liveValue = AudioFileCreateUseCase(
-        start: { id, data in
-            try await AudioFileManager.database.createAudioFile(id: id, data: data)
+    static public var liveValue = AudioFileDeleteUseCase(
+        start: { id in
+            try await AudioFileManager.database.deleteAudioFile(id: id)
         }
     )
     

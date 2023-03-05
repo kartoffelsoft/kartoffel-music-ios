@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import CommonModels
+import AudioFileDeleteUseCase
 import AudioFileReadUseCase
 
 public struct AudioFileOptions: ReducerProtocol {
@@ -19,7 +20,11 @@ public struct AudioFileOptions: ReducerProtocol {
         case dismiss
     }
     
+    @Dependency(\.audioFileDeleteUseCase) var audioFileDeleteUseCase
     @Dependency(\.audioFileReadUseCase) var audioFileReadUseCase
+    
+    private enum DeleteRequestID {}
+    private enum AudioFileReadRequestID {}
     
     public init() {}
     
@@ -32,6 +37,7 @@ public struct AudioFileOptions: ReducerProtocol {
                         try await audioFileReadUseCase.start(id)
                     })
                 }
+                .cancellable(id: AudioFileReadRequestID.self)
 
             case let .receiveMetaData(.success(data)):
                 guard let data = data else { return .none }
@@ -48,7 +54,11 @@ public struct AudioFileOptions: ReducerProtocol {
                 return .none
                 
             case .delete:
-                return .none
+                return .run { [id = state.id] send in
+                    try? await audioFileDeleteUseCase.start(id)
+                    await send(.dismiss)
+                }
+                .cancellable(id: DeleteRequestID.self)
             case .dismiss:
                 return .none
             }

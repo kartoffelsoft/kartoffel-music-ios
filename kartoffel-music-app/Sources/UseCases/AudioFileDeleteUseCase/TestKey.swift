@@ -3,17 +3,17 @@ import XCTestDynamicOverlay
 
 extension DependencyValues {
     
-    public var audioFileCreateUseCase: AudioFileCreateUseCase {
-        get { self[AudioFileCreateUseCase.self] }
-        set { self[AudioFileCreateUseCase.self] = newValue }
+    public var audioFileDeleteUseCase: AudioFileDeleteUseCase {
+        get { self[AudioFileDeleteUseCase.self] }
+        set { self[AudioFileDeleteUseCase.self] = newValue }
     }
     
 }
 
-extension AudioFileCreateUseCase: TestDependencyKey {
+extension AudioFileDeleteUseCase: TestDependencyKey {
     
-    static public var testValue = AudioFileCreateUseCase(
-        start: XCTUnimplemented("\(AudioFileCreateUseCase.self).start")
+    static public var testValue = AudioFileDeleteUseCase(
+        start: XCTUnimplemented("\(AudioFileDeleteUseCase.self).start")
     )
     
 }
