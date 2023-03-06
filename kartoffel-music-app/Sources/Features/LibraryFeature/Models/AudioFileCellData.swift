@@ -28,4 +28,8 @@ struct AudioFileCellData: Equatable, Hashable, Identifiable {
         self.playState = playState
     }
     
+    mutating func mutatingPlayState(_ state: PlayState) -> Self {
+        playState = state
+        return self
+    }
 }

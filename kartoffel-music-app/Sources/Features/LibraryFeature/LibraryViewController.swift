@@ -190,11 +190,11 @@ public class LibraryViewController: UIViewController {
     }
     
     private func setupBindings() {
-        self.viewStore.publisher.files.sink { [weak self] files in
+        self.viewStore.publisher.cellDataList.sink { [weak self] cellDataList in
             var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems(StorageProvider.allCases, toSection: .storageProviders)
-            snapshot.appendItems((files.elements), toSection: .localFiles)
+            snapshot.appendItems((cellDataList.elements), toSection: .localFiles)
             self?.dataSource.apply(snapshot)
             self?.collectionView.reloadData()
         }

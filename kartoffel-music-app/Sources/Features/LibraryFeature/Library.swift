@@ -21,7 +21,18 @@ public struct Library: ReducerProtocol {
         var googleDrive: GoogleDrive.State? = nil
         var audioFileOptions: AudioFileOptions.State? = nil
         
-        var files: IdentifiedArrayOf<AudioFileCellData> = []
+        var cellDataList: IdentifiedArrayOf<AudioFileCellData> = []
+        var playingAudioId: String? = nil {
+            willSet {
+                guard let id = playingAudioId else { return }
+                cellDataList[id: id] = cellDataList[id: id]?.mutatingPlayState(.stop)
+            }
+            
+            didSet {
+                guard let id = playingAudioId else { return }
+                cellDataList[id: id] = cellDataList[id: id]?.mutatingPlayState(.playing)
+            }
+        }
         
         public init() {
         }
@@ -30,6 +41,7 @@ public struct Library: ReducerProtocol {
     public enum Action: Equatable {
         case initialize
         case play(selection: Int)
+        case playing(TaskResult<String?>)
         case receiveFileList(TaskResult<[AudioMetaData]>)
         case navigateToStorageProvider(selection: Int?)
         case navigateToAudioFileOptions(selection: Int?)
@@ -53,14 +65,27 @@ public struct Library: ReducerProtocol {
                 }
                 
             case let .play(selection):
-                let file = state.files[selection]
-                return .run { [id = file.id] send in
-                    try await audioPlayUseCase.start(id)
+                let id = (state.playingAudioId != state.cellDataList[selection].id) ?
+                    state.cellDataList[selection].id :
+                    nil
+                    
+                return .task {
+                    await .playing(TaskResult {
+                        try await audioPlayUseCase.start(id)
+                    })
                 }
                 
-            case let .receiveFileList(.success(files)):
-                state.files.removeAll()
-                state.files.append(contentsOf: files.map({
+            case let .playing(.success(id)):
+                state.playingAudioId = id
+                return .none
+                
+            case .playing(.failure):
+                state.playingAudioId = nil
+                return .none
+                
+            case let .receiveFileList(.success(list)):
+                state.cellDataList.removeAll()
+                state.cellDataList.append(contentsOf: list.map({
                     AudioFileCellData(
                         id: $0.id,
                         title: $0.title,
@@ -86,7 +111,7 @@ public struct Library: ReducerProtocol {
                 
             case let .navigateToAudioFileOptions(selection: .some(index)):
                 state.modalNavigation = .audioFileOptions
-                state.audioFileOptions = .init(id: state.files[index].id)
+                state.audioFileOptions = .init(id: state.cellDataList[index].id)
                 return .none
                 
             case .navigateToAudioFileOptions(selection: .none):
