@@ -9,6 +9,20 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "CommonModels",
+            targets: ["CommonModels"]
+        ),
+        .library(
+            name: "CommonViews",
+            targets: ["CommonViews"]
+        ),
+        
+        .library(
+            name: "AudioFileManager",
+            targets: ["AudioFileManager"]
+        ),
+
+        .library(
             name: "AppRootFeature",
             targets: ["AppRootFeature"]
         ),
@@ -65,16 +79,6 @@ let package = Package(
             name: "GoogleDriveUseCase",
             targets: ["GoogleDriveUseCase"]
         ),
-        
-        .library(
-            name: "AudioFileManager",
-            targets: ["AudioFileManager"]
-        ),
-        
-        .library(
-            name: "CommonModels",
-            targets: ["CommonModels"]
-        ),
     ],
     dependencies: [
         .package(url: "https://github.com/google/google-api-objectivec-client-for-rest", exact: "3.0.0"),
@@ -83,6 +87,26 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-identified-collections", exact: "0.6.0"),
     ],
     targets: [
+        .target(
+            name: "CommonModels"
+        ),
+        .target(
+            name: "CommonViews",
+            dependencies: [
+                "CommonModels",
+                "StyleGuide",
+            ]
+        ),
+        
+        .target(
+            name: "AudioFileManager",
+            dependencies: [
+                "CommonModels",
+                .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
+            ],
+            path: "./Sources/Services/AudioFileManager"
+        ),
+        
         .target(
             name: "AppRootFeature",
             dependencies: [
@@ -123,6 +147,8 @@ let package = Package(
                 "AudioFileOptionsFeature",
                 "AudioFileReadAllUseCase",
                 "AudioPlayUseCase",
+                "CommonModels",
+                "CommonViews",
                 "GoogleDriveFeature",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
@@ -206,19 +232,6 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/GoogleDriveUseCase"
-        ),
-        
-        .target(
-            name: "AudioFileManager",
-            dependencies: [
-                "CommonModels",
-                .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
-            ],
-            path: "./Sources/Services/AudioFileManager"
-        ),
-        
-        .target(
-            name: "CommonModels"
         ),
         
         .testTarget(

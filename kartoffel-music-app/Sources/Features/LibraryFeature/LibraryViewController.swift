@@ -138,13 +138,18 @@ public class LibraryViewController: UIViewController {
                         withReuseIdentifier: AudioFileCell.reuseIdentifier,
                         for: indexPath
                     ) as! AudioFileCell
-                    cell.data = data as? AudioFileCellData
+                    
                     cell.optionsButton.tag = indexPath.row
                     cell.optionsButton.addTarget(
                         self,
                         action: #selector(self.handleOptionsButtonTap),
                         for: .touchUpInside
                     )
+                    
+                    if let data = data as? AudioFileCellData {
+                        cell.render(data: data)
+                    }
+                    
                     return cell
                 case .none:
                     break

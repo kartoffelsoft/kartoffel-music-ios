@@ -9,6 +9,9 @@ public struct UIColorTheme {
     public let background = UIColor(
         named: "background-500", in: Bundle.module, compatibleWith: nil
     )!
+    public let background400 = UIColor(
+        named: "background-400", in: Bundle.module, compatibleWith: nil
+    )!
     public let background300 = UIColor(
         named: "background-300", in: Bundle.module, compatibleWith: nil
     )!

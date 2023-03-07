@@ -1,3 +1,5 @@
+import CommonModels
+import CommonViews
 import StyleGuide
 import UIKit
 
@@ -5,21 +7,12 @@ class AudioFileCell: UICollectionViewCell {
     
     static let reuseIdentifier = "audio-file-cell"
     
-    var data: AudioFileCellData? {
-        get { return nil }
-        set {
-            guard let newValue = newValue else { return }
-            if let artwork = newValue.artwork {
-                imageView.image = UIImage(data: artwork)
-            }
-            titleLabel.text = newValue.title ?? "Unknown title"
-            subtitleLabel.text = newValue.artist ?? "Unknown artist"
-        }
-    }
-    
-    private let imageView = {
-        let view = UIImageView()
-        view.tintColor = .theme.primary
+    private lazy var playableImageView: PlayableImageView = {
+        let view = PlayableImageView()
+        NSLayoutConstraint.activate([
+            view.widthAnchor.constraint(equalToConstant: 72),
+            view.heightAnchor.constraint(equalToConstant: 72),
+        ])
         view.contentMode = .scaleAspectFit
         return view
     }()
@@ -57,6 +50,9 @@ class AudioFileCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = .theme.background400
+        layer.cornerRadius = 4
+        clipsToBounds = true
         setupConstraints()
     }
     
@@ -64,24 +60,41 @@ class AudioFileCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func render(data: AudioFileCellData) {
+        if let artwork = data.artwork {
+            playableImageView.image = UIImage(data: artwork)
+        }
+        
+        playableImageView.render(data: data.playState)
+        
+        switch data.playState {
+        case .stop:
+            titleLabel.textColor = .theme.primary
+
+        case .playing:
+            titleLabel.textColor = .theme.secondary
+        }
+        
+        titleLabel.text = data.title ?? "Unknown title"
+        subtitleLabel.text = data.artist ?? "Unknown artist"
+    }
+    
     private func setupConstraints() {
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        playableImageView.translatesAutoresizingMaskIntoConstraints = false
         descriptionStackView.translatesAutoresizingMaskIntoConstraints = false
         optionsButton.translatesAutoresizingMaskIntoConstraints = false
         
-        addSubview(imageView)
+        addSubview(playableImageView)
         addSubview(descriptionStackView)
         addSubview(optionsButton)
         
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: 72),
-            imageView.heightAnchor.constraint(equalToConstant: 72),
+            playableImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            playableImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-            descriptionStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+            descriptionStackView.leadingAnchor.constraint(equalTo: playableImageView.trailingAnchor, constant: 16),
             descriptionStackView.trailingAnchor.constraint(equalTo: optionsButton.leadingAnchor, constant: -8),
-            descriptionStackView.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+            descriptionStackView.centerYAnchor.constraint(equalTo: playableImageView.centerYAnchor),
             
             optionsButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             optionsButton.centerYAnchor.constraint(equalTo: centerYAnchor),

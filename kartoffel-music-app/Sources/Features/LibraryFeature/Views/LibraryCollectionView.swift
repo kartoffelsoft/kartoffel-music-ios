@@ -46,7 +46,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
             let section = NSCollectionLayoutSection(group: group)
             section.boundarySupplementaryItems = [ header ]
             section.orthogonalScrollingBehavior = .continuous
-            section.contentInsets = .init(top: 0, leading: 16, bottom: 16, trailing: 16)
+            section.contentInsets = .init(top: 0, leading: 8, bottom: 16, trailing: 8)
             return section
 
         case .localFiles:
@@ -56,6 +56,7 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                     heightDimension: .absolute(80)
                 )
             )
+            item.contentInsets = .init(top: 4, leading: 0, bottom: 4, trailing: 0)
             
             let header = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: NSCollectionLayoutSize(
@@ -74,10 +75,10 @@ private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout
                 ),
                 subitems: [ item ]
             )
-            
+
             let section = NSCollectionLayoutSection(group: group)
             section.boundarySupplementaryItems = [ header ]
-            section.contentInsets = .init(top: 0, leading: 16, bottom: 16, trailing: 16)
+            section.contentInsets = .init(top: 0, leading: 8, bottom: 16, trailing: 8)
             return section
 
         default:

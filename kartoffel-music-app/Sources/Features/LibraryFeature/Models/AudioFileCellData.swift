@@ -1,11 +1,7 @@
+import CommonModels
 import Foundation
 
 struct AudioFileCellData: Equatable, Hashable, Identifiable {
-    
-    enum PlayState {
-        case stop
-        case playing
-    }
     
     let id: String
     let title: String?
