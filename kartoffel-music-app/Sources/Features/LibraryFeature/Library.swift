@@ -30,7 +30,7 @@ public struct Library: ReducerProtocol {
             
             didSet {
                 guard let id = playingAudioId else { return }
-                cellDataList[id: id] = cellDataList[id: id]?.mutatingPlayState(.playing(progress: 33))
+                cellDataList[id: id] = cellDataList[id: id]?.mutatingPlayState(.playing(progress: 0))
             }
         }
         

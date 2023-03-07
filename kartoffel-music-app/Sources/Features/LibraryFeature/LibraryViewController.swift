@@ -200,8 +200,7 @@ public class LibraryViewController: UIViewController {
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems(StorageProvider.allCases, toSection: .storageProviders)
             snapshot.appendItems((cellDataList.elements), toSection: .localFiles)
-            self?.dataSource.apply(snapshot)
-            self?.collectionView.reloadData()
+            self?.dataSource.apply(snapshot, animatingDifferences: false)
         }
         .store(in: &self.cancellables)
     }
