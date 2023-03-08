@@ -63,7 +63,6 @@ class AudioFileCell: UICollectionViewCell {
     func render(data: AudioFileCellData) {
         if let artwork = data.artwork {
             playableImageView.image = UIImage(data: artwork)
-            playableImageView.layoutIfNeeded()
         }
         
         playableImageView.render(data: data.playState)

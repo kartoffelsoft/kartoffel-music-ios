@@ -9,8 +9,8 @@ public class GoogleDriveUseCase {
     public var downloadFile: @Sendable (_ id: String) -> AsyncThrowingStream<DownloadEvent, Error>
 
     public enum DownloadEvent: Equatable {
-      case response(Data)
-      case updateProgress(Double)
+        case response(Data)
+        case updateProgress(Double)
     }
     
     init(

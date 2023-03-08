@@ -29,6 +29,12 @@ public class PlayableImageView: UIImageView {
         setupConstraints()
     }
     
+    public override var image: UIImage? {
+        didSet {
+            layoutIfNeeded()
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
