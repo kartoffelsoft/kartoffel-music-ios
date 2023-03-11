@@ -21,6 +21,10 @@ let package = Package(
             name: "AudioFileManager",
             targets: ["AudioFileManager"]
         ),
+        .library(
+            name: "AudioPlayer",
+            targets: ["AudioPlayer"]
+        ),
 
         .library(
             name: "AppRootFeature",
@@ -76,6 +80,10 @@ let package = Package(
             targets: ["AudioPlayUseCase"]
         ),
         .library(
+            name: "AudioStopUseCase",
+            targets: ["AudioStopUseCase"]
+        ),
+        .library(
             name: "GoogleDriveUseCase",
             targets: ["GoogleDriveUseCase"]
         ),
@@ -105,6 +113,12 @@ let package = Package(
                 .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
             ],
             path: "./Sources/Services/AudioFileManager"
+        ),
+        .target(
+            name: "AudioPlayer",
+            dependencies: [
+            ],
+            path: "./Sources/Services/AudioPlayer"
         ),
         
         .target(
@@ -147,6 +161,7 @@ let package = Package(
                 "AudioFileOptionsFeature",
                 "AudioFileReadAllUseCase",
                 "AudioPlayUseCase",
+                "AudioStopUseCase",
                 "CommonModels",
                 "CommonViews",
                 "GoogleDriveFeature",
@@ -216,9 +231,18 @@ let package = Package(
         .target(
             name: "AudioPlayUseCase",
             dependencies: [
+                "AudioPlayer",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/AudioPlayUseCase"
+        ),
+        .target(
+            name: "AudioStopUseCase",
+            dependencies: [
+                "AudioPlayer",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "./Sources/UseCases/AudioStopUseCase"
         ),
         .target(
             name: "GoogleDriveUseCase",

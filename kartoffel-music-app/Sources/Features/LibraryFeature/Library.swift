@@ -3,6 +3,7 @@ import CommonModels
 import ComposableArchitecture
 import AudioFileReadAllUseCase
 import AudioPlayUseCase
+import AudioStopUseCase
 import GoogleDriveFeature
 
 public struct Library: ReducerProtocol {
@@ -20,8 +21,8 @@ public struct Library: ReducerProtocol {
         var modalNavigation: ModalNavigation? =  nil
         var googleDrive: GoogleDrive.State? = nil
         var audioFileOptions: AudioFileOptions.State? = nil
-        
         var cellDataList: IdentifiedArrayOf<AudioFileCellData> = []
+        
         var playingAudioId: String? = nil {
             willSet {
                 guard let id = playingAudioId else { return }
@@ -34,6 +35,13 @@ public struct Library: ReducerProtocol {
             }
         }
         
+        var playingAudioProgress: Double = 0 {
+            didSet {
+                guard let id = playingAudioId else { return }
+                cellDataList[id: id] = cellDataList[id: id]?.mutatingPlayState(.playing(progress: playingAudioProgress))
+            }
+        }
+        
         public init() {
         }
     }
@@ -41,7 +49,7 @@ public struct Library: ReducerProtocol {
     public enum Action: Equatable {
         case initialize
         case play(selection: Int)
-        case playing(TaskResult<String?>)
+        case playing(TaskResult<AudioPlayUseCase.Event>)
         case receiveFileList(TaskResult<[AudioMetaData]>)
         case navigateToStorageProvider(selection: Int?)
         case navigateToAudioFileOptions(selection: Int?)
@@ -51,6 +59,7 @@ public struct Library: ReducerProtocol {
     
     @Dependency(\.audioFileReadAllUseCase) var audioFileReadAllUseCase
     @Dependency(\.audioPlayUseCase) var audioPlayUseCase
+    @Dependency(\.audioStopUseCase) var audioStopUseCase
     
     public init() {}
     
@@ -65,23 +74,40 @@ public struct Library: ReducerProtocol {
                 }
                 
             case let .play(selection):
-                let id = (state.playingAudioId != state.cellDataList[selection].id) ?
-                    state.cellDataList[selection].id :
-                    nil
-                    
-                return .task {
-                    await .playing(TaskResult {
-                        try await audioPlayUseCase.start(id)
-                    })
+                let id = state.cellDataList[selection].id
+                guard id != state.playingAudioId else {
+                    state.playingAudioId = nil
+                    return .run { send in
+                        Task.cancel(id: id)
+                        try await audioStopUseCase.start()
+                    }
                 }
+
+                return .run { send in
+                    for try await event in self.audioPlayUseCase.start(id) {
+                        await send(.playing(.success(event)), animation: .default)
+                    }
+                } catch: { error, send in
+                    await send(.playing(.failure(error)), animation: .default)
+                }
+                .cancellable(id: id)
                 
-            case let .playing(.success(id)):
+            case let .playing(.success(.start(id, _))):
                 state.playingAudioId = id
                 return .none
                 
-            case .playing(.failure):
-                state.playingAudioId = nil
+            case let .playing(.success(.playing(_, duration, elapsed))):
+                state.playingAudioProgress = elapsed / duration
                 return .none
+                
+            case let .playing(.success(.finish(id))):
+                state.playingAudioId = nil
+                return .cancel(id: id)
+                
+            case .playing(.failure):
+                guard let id = state.playingAudioId else { return .none }
+                state.playingAudioId = nil
+                return .cancel(id: id)
                 
             case let .receiveFileList(.success(list)):
                 state.cellDataList.removeAll()

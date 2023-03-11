@@ -129,8 +129,10 @@ public struct GoogleDrive: ReducerProtocol {
                 
             case .didTapCancelButton:
                 guard !state.selectedFileIds.isEmpty else { return .none }
+                guard let id = state.downloadQueue.first else { return .none }
+                state.downloadQueue.reload([])
                 state.downloadBar = .paused(0, state.selectedFileIds.count)
-                return .none
+                return .cancel(id: id)
             }
         }
     }
