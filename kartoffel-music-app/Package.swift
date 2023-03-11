@@ -25,6 +25,14 @@ let package = Package(
             name: "AudioPlayer",
             targets: ["AudioPlayer"]
         ),
+        .library(
+            name: "AudioPlayListManager",
+            targets: ["AudioPlayListManager"]
+        ),
+        .library(
+            name: "CoreDataManager",
+            targets: ["CoreDataManager"]
+        ),
 
         .library(
             name: "AppRootFeature",
@@ -119,6 +127,20 @@ let package = Package(
             dependencies: [
             ],
             path: "./Sources/Services/AudioPlayer"
+        ),
+        .target(
+            name: "AudioPlayListManager",
+            dependencies: [
+                "CoreDataManager"
+            ],
+            path: "./Sources/Services/AudioPlayListManager"
+        ),
+        .target(
+            name: "CoreDataManager",
+            dependencies: [
+            ],
+            path: "./Sources/Services/CoreDataManager",
+            resources: [.process("Resources/")]
         ),
         
         .target(
