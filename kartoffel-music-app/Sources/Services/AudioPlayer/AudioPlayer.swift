@@ -42,7 +42,8 @@ public class AudioPlayer {
                     
                     elapsedTimeObserver = player.addPeriodicTimeObserver(
                         forInterval: interval,
-                        queue: .main) { [weak self] elapsedTime in
+                        queue: .main
+                    ) { [weak self] elapsedTime in
                         if let currentItem = self?.player.currentItem {
                             let durationInSeconds = CMTimeGetSeconds(currentItem.asset.duration)
                             let elapsedTimeInSeconds = CMTimeGetSeconds(elapsedTime)
