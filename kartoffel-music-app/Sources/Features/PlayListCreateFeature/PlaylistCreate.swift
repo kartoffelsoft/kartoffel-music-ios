@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import PlaylistCreateUseCase
 
-public struct PlayListCreate: ReducerProtocol {
+public struct PlaylistCreate: ReducerProtocol {
     public struct State: Equatable {
         public init() {
             

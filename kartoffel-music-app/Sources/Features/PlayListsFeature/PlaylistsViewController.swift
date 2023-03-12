@@ -1,17 +1,17 @@
 import Combine
-import PlayListCreateFeature
+import PlaylistCreateFeature
 import ComposableArchitecture
 import StyleGuide
 import UIKit
 import UIKitUtils
 
-public class PlayListsViewController: UIViewController {
+public class PlaylistsViewController: UIViewController {
     
-    private let store: StoreOf<PlayLists>
-    private let viewStore: ViewStoreOf<PlayLists>
+    private let store: StoreOf<Playlists>
+    private let viewStore: ViewStoreOf<Playlists>
     private var cancellables: Set<AnyCancellable> = []
     
-    public init(store: StoreOf<PlayLists>) {
+    public init(store: StoreOf<Playlists>) {
         self.store = store
         self.viewStore = ViewStore(store)
         super.init(nibName: nil, bundle: nil)
@@ -31,7 +31,7 @@ public class PlayListsViewController: UIViewController {
     private func setupNavigationBar() {
         let label = UILabel()
         label.textColor = .theme.primary
-        label.text = "Play Lists";
+        label.text = "Playlists";
         label.font = .systemFont(ofSize: 24, weight: .bold)
         
         let addButton = UIBarButtonItem(
@@ -52,9 +52,9 @@ public class PlayListsViewController: UIViewController {
                 self.present(
                     IfLetStoreController(
                         store: self.store
-                        .scope(state: \.playListCreate, action: PlayLists.Action.playListCreate)
+                        .scope(state: \.playListCreate, action: Playlists.Action.playListCreate)
                     ) {
-                        PlayListCreateViewController(store: $0)
+                        PlaylistCreateViewController(store: $0)
                     } else: {
                         UIViewController()
                     },

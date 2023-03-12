@@ -51,12 +51,12 @@ let package = Package(
             targets: ["LibraryFeature"]
         ),
         .library(
-            name: "PlayListCreateFeature",
-            targets: ["PlayListCreateFeature"]
+            name: "PlaylistCreateFeature",
+            targets: ["PlaylistCreateFeature"]
         ),
         .library(
-            name: "PlayListsFeature",
-            targets: ["PlayListsFeature"]
+            name: "PlaylistsFeature",
+            targets: ["PlaylistsFeature"]
         ),
         .library(
             name: "StyleGuide",
@@ -151,7 +151,7 @@ let package = Package(
             name: "AppRootFeature",
             dependencies: [
                 "LibraryFeature",
-                "PlayListsFeature",
+                "PlaylistsFeature",
                 "StyleGuide",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
@@ -197,22 +197,22 @@ let package = Package(
             resources: [.process("Resources/")]
         ),
         .target(
-            name: "PlayListCreateFeature",
+            name: "PlaylistCreateFeature",
             dependencies: [
                 "PlaylistCreateUseCase",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
-            path: "./Sources/Features/PlayListCreateFeature"
+            path: "./Sources/Features/PlaylistCreateFeature"
         ),
         .target(
-            name: "PlayListsFeature",
+            name: "PlaylistsFeature",
             dependencies: [
-                "PlayListCreateFeature",
+                "PlaylistCreateFeature",
                 "StyleGuide",
                 "UIKitUtils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
-            path: "./Sources/Features/PlayListsFeature"
+            path: "./Sources/Features/PlaylistsFeature"
         ),
         .target(
             name: "StyleGuide",
@@ -287,6 +287,7 @@ let package = Package(
         .target(
             name: "PlaylistCreateUseCase",
             dependencies: [
+                "PlaylistManager",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/PlaylistCreateUseCase"

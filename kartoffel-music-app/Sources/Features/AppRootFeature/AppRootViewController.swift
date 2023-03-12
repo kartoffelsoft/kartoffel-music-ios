@@ -1,6 +1,6 @@
 import ComposableArchitecture
 import LibraryFeature
-import PlayListsFeature
+import PlaylistsFeature
 import StyleGuide
 import UIKit
 
@@ -27,10 +27,10 @@ public class AppRootViewController: UITabBarController {
 
         self.viewControllers = [
             makeTabBarViewController(
-                viewController: PlayListsViewController(
+                viewController: PlaylistsViewController(
                     store: self.store.scope(
-                        state: \.playLists,
-                        action: AppRoot.Action.playLists
+                        state: \.playlists,
+                        action: AppRoot.Action.playlists
                     )
                 ),
                 tabBarImage: UIImage(systemName: "play.rectangle"),

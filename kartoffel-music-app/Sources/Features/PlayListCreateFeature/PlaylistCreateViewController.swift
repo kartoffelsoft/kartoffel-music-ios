@@ -2,10 +2,10 @@ import ComposableArchitecture
 import StyleGuide
 import UIKit
 
-public class PlayListCreateViewController: UIViewController {
+public class PlaylistCreateViewController: UIViewController {
     
-    private let store: StoreOf<PlayListCreate>
-    private let viewStore: ViewStoreOf<PlayListCreate>
+    private let store: StoreOf<PlaylistCreate>
+    private let viewStore: ViewStoreOf<PlaylistCreate>
     
     private var scrollView: UIScrollView = .init()
     
@@ -80,7 +80,7 @@ public class PlayListCreateViewController: UIViewController {
     }()
 
     
-    public init(store: StoreOf<PlayListCreate>) {
+    public init(store: StoreOf<PlaylistCreate>) {
         self.store = store
         self.viewStore = ViewStore(store)
         super.init(nibName: nil, bundle: nil)
@@ -185,7 +185,7 @@ public class PlayListCreateViewController: UIViewController {
 
 }
 
-extension PlayListCreateViewController: UIScrollViewDelegate {
+extension PlaylistCreateViewController: UIScrollViewDelegate {
     
     public func scrollViewWillBeginDragging(_: UIScrollView) {
         textField.resignFirstResponder()
@@ -193,7 +193,7 @@ extension PlayListCreateViewController: UIScrollViewDelegate {
 
 }
 
-extension PlayListCreateViewController: UIAdaptivePresentationControllerDelegate {
+extension PlaylistCreateViewController: UIAdaptivePresentationControllerDelegate {
     
     public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         viewStore.send(.dismiss)

@@ -1,10 +1,10 @@
 import ComposableArchitecture
-import PlayListCreateFeature
+import PlaylistCreateFeature
 
-public struct PlayLists: ReducerProtocol {
+public struct Playlists: ReducerProtocol {
     public struct State: Equatable {
         var isNavigationActive = false
-        var playListCreate: PlayListCreate.State? = nil
+        var playListCreate: PlaylistCreate.State? = nil
         
         public init() {
             
@@ -13,7 +13,7 @@ public struct PlayLists: ReducerProtocol {
     
     public enum Action: Equatable {
         case navigateToPlayListCreate(Bool)
-        case playListCreate(PlayListCreate.Action)
+        case playListCreate(PlaylistCreate.Action)
     }
     
     public init() {}
@@ -23,7 +23,7 @@ public struct PlayLists: ReducerProtocol {
             switch action {
             case .navigateToPlayListCreate(true):
                 state.isNavigationActive = true
-                state.playListCreate = PlayListCreate.State()
+                state.playListCreate = PlaylistCreate.State()
                 return .none
             case .navigateToPlayListCreate(false):
                 return .none
@@ -36,7 +36,7 @@ public struct PlayLists: ReducerProtocol {
             }
         }
         .ifLet(\.playListCreate, action: /Action.playListCreate) {
-            PlayListCreate()
+            PlaylistCreate()
         }
     }
 }
