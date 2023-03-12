@@ -15,6 +15,9 @@ public struct UIColorTheme {
     public let background300 = UIColor(
         named: "background-300", in: Bundle.module, compatibleWith: nil
     )!
+    public let background200 = UIColor(
+        named: "background-200", in: Bundle.module, compatibleWith: nil
+    )!
     public let background100 = UIColor(
         named: "background-100", in: Bundle.module, compatibleWith: nil
     )!
