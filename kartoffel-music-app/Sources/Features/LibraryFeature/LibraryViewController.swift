@@ -146,7 +146,7 @@ public class LibraryViewController: UIViewController {
                         for: .touchUpInside
                     )
                     
-                    if let data = data as? AudioFileCellData {
+                    if let data = data as? AudioFileViewData {
                         cell.render(data: data)
                     }
                     
@@ -195,11 +195,11 @@ public class LibraryViewController: UIViewController {
     }
     
     private func setupBindings() {
-        self.viewStore.publisher.cellDataList.sink { [weak self] cellDataList in
+        self.viewStore.publisher.arrayOfFileViewData.sink { [weak self] data in
             var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems(StorageProvider.allCases, toSection: .storageProviders)
-            snapshot.appendItems((cellDataList.elements), toSection: .localFiles)
+            snapshot.appendItems(data.elements, toSection: .localFiles)
             self?.dataSource.apply(snapshot, animatingDifferences: false)
         }
         .store(in: &self.cancellables)

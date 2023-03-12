@@ -1,3 +1,4 @@
+import CommonModels
 import ComposableArchitecture
 import PlaylistCreateFeature
 import PlaylistReadUseCase
@@ -7,6 +8,8 @@ public struct Playlists: ReducerProtocol {
         var isNavigationActive = false
         var playlistCreate: PlaylistCreate.State? = nil
         
+        var arrayOfPlaylistViewData: IdentifiedArrayOf<PlaylistViewData> = []
+        
         public init() {
             
         }
@@ -14,7 +17,7 @@ public struct Playlists: ReducerProtocol {
     
     public enum Action: Equatable {
         case initialize
-        case receivePlaylists(TaskResult<[String]>)
+        case receivePlaylists(TaskResult<[PlaylistData]>)
         case navigateToPlaylistCreate(Bool)
         case playlistCreate(PlaylistCreate.Action)
     }
@@ -36,6 +39,13 @@ public struct Playlists: ReducerProtocol {
                 }
                 .cancellable(id: PlaylistReadRequestID.self)
             case let .receivePlaylists(.success(data)):
+                state.arrayOfPlaylistViewData.removeAll()
+                state.arrayOfPlaylistViewData.append(contentsOf: data.map({
+                    PlaylistViewData(
+                        id: $0.id,
+                        name: $0.name
+                    )
+                }))
                 return .none
             case let .receivePlaylists(.failure):
                 return .none

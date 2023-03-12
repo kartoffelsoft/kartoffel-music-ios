@@ -60,7 +60,7 @@ class AudioFileCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func render(data: AudioFileCellData) {
+    func render(data: AudioFileViewData) {
         if let artwork = data.artwork {
             playableImageView.image = UIImage(data: artwork)
         }

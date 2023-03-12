@@ -1,7 +1,7 @@
 import CommonModels
 import Foundation
 
-struct AudioFileCellData: Equatable, Hashable, Identifiable {
+struct AudioFileViewData: Equatable, Hashable, Identifiable {
     
     let id: String
     let title: String?

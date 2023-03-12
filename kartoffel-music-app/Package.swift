@@ -211,6 +211,7 @@ let package = Package(
         .target(
             name: "PlaylistsFeature",
             dependencies: [
+                "CommonModels",
                 "PlaylistCreateFeature",
                 "PlaylistReadUseCase",
                 "StyleGuide",
@@ -300,6 +301,7 @@ let package = Package(
         .target(
             name: "PlaylistReadUseCase",
             dependencies: [
+                "CommonModels",
                 "PlaylistManager",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
