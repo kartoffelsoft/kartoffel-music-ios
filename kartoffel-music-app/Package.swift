@@ -26,12 +26,12 @@ let package = Package(
             targets: ["AudioPlayer"]
         ),
         .library(
-            name: "AudioPlayListManager",
-            targets: ["AudioPlayListManager"]
-        ),
-        .library(
             name: "CoreDataManager",
             targets: ["CoreDataManager"]
+        ),
+        .library(
+            name: "PlaylistManager",
+            targets: ["PlaylistManager"]
         ),
 
         .library(
@@ -95,6 +95,10 @@ let package = Package(
             name: "GoogleDriveUseCase",
             targets: ["GoogleDriveUseCase"]
         ),
+        .library(
+            name: "PlaylistCreateUseCase",
+            targets: ["PlaylistCreateUseCase"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/google/google-api-objectivec-client-for-rest", exact: "3.0.0"),
@@ -129,11 +133,11 @@ let package = Package(
             path: "./Sources/Services/AudioPlayer"
         ),
         .target(
-            name: "AudioPlayListManager",
+            name: "PlaylistManager",
             dependencies: [
                 "CoreDataManager"
             ],
-            path: "./Sources/Services/AudioPlayListManager"
+            path: "./Sources/Services/PlaylistManager"
         ),
         .target(
             name: "CoreDataManager",
@@ -195,6 +199,7 @@ let package = Package(
         .target(
             name: "PlayListCreateFeature",
             dependencies: [
+                "PlaylistCreateUseCase",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ],
             path: "./Sources/Features/PlayListCreateFeature"
@@ -278,6 +283,13 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/GoogleDriveUseCase"
+        ),
+        .target(
+            name: "PlaylistCreateUseCase",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "./Sources/UseCases/PlaylistCreateUseCase"
         ),
         
         .testTarget(

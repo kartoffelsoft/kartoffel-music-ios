@@ -143,8 +143,8 @@ public class PlayListCreateViewController: UIViewController {
             mainStackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             mainStackView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor, constant: -28),
 
-            dismissButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-            dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            dismissButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
+            dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
         ])
     }
     
@@ -175,7 +175,8 @@ public class PlayListCreateViewController: UIViewController {
     }
     
     @objc private func handleCreateButtonTap() {
-        print("# handleCreateButtonTap")
+        guard let text = textField.text else { return }
+        viewStore.send(.create(text))
     }
     
     @objc private func handleDismissButtonTap() {

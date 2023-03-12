@@ -2,9 +2,9 @@ import CoreData
 import CoreDataManager
 import Foundation
 
-public class AudioPlayListManager {
+public class PlaylistManager {
     
-    public static let shared = AudioPlayListManager()
+    public static let shared = PlaylistManager()
     
     private init() {}
 
