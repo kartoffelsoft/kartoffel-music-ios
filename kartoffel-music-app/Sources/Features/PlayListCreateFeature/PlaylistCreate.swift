@@ -15,14 +15,19 @@ public struct PlaylistCreate: ReducerProtocol {
     
     @Dependency(\.playlistCreateUseCase) var playlistCreateUseCase
     
+    private enum PlaylistCreateRequestID {}
+
     public init() {}
     
     public var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
             case let .create(name):
-                print("# create: ", name)
-                return .none
+                return .run { send in
+                    try? await playlistCreateUseCase.start(name)
+                    await send(.dismiss)
+                }
+                .cancellable(id: PlaylistCreateRequestID.self)
             case .dismiss:
                 return .none
             }

@@ -26,6 +26,8 @@ public class PlaylistsViewController: UIViewController {
         
         setupNavigation()
         setupNavigationBar()
+        
+        viewStore.send(.initialize)
     }
     
     private func setupNavigationBar() {
@@ -52,7 +54,7 @@ public class PlaylistsViewController: UIViewController {
                 self.present(
                     IfLetStoreController(
                         store: self.store
-                        .scope(state: \.playListCreate, action: Playlists.Action.playListCreate)
+                        .scope(state: \.playlistCreate, action: Playlists.Action.playlistCreate)
                     ) {
                         PlaylistCreateViewController(store: $0)
                     } else: {
@@ -68,7 +70,7 @@ public class PlaylistsViewController: UIViewController {
     }
     
     @objc private func handleAddButtonTap() {
-        viewStore.send(.navigateToPlayListCreate(true))
+        viewStore.send(.navigateToPlaylistCreate(true))
     }
     
 }

@@ -99,6 +99,10 @@ let package = Package(
             name: "PlaylistCreateUseCase",
             targets: ["PlaylistCreateUseCase"]
         ),
+        .library(
+            name: "PlaylistReadUseCase",
+            targets: ["PlaylistReadUseCase"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/google/google-api-objectivec-client-for-rest", exact: "3.0.0"),
@@ -208,6 +212,7 @@ let package = Package(
             name: "PlaylistsFeature",
             dependencies: [
                 "PlaylistCreateFeature",
+                "PlaylistReadUseCase",
                 "StyleGuide",
                 "UIKitUtils",
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
@@ -291,6 +296,14 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             ],
             path: "./Sources/UseCases/PlaylistCreateUseCase"
+        ),
+        .target(
+            name: "PlaylistReadUseCase",
+            dependencies: [
+                "PlaylistManager",
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            ],
+            path: "./Sources/UseCases/PlaylistReadUseCase"
         ),
         
         .testTarget(

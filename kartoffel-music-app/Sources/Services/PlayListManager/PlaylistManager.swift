@@ -16,10 +16,12 @@ public class PlaylistManager {
         CoreDataManager.shared.save()
     }
         
-    public func read() {
-//        let request = NSFetchRequest<PlaylistEntity>(entityName: "PlaylistEntity")
-//        let lists = try CoreDataManager.shared.context.fetch(request)
-//        print("# lists: ", lists)
+    public func read() async throws {
+        let request = NSFetchRequest<PlaylistEntity>(entityName: "PlaylistEntity")
+        let lists = try CoreDataManager.shared.context.fetch(request)
+        lists.forEach { element in
+            print("# element: ", element.name)
+        }
     }
     
 }
